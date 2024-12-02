@@ -1,9 +1,9 @@
 'use client'
 
 import { useAdsState } from '@/hooks/useAdsState'
-import { TableView } from '@/components/TableView'
+import { TableView } from './components/TableView'
 
-export default function HomePage() {
+export default function AdsPage() {
   const {
     filters,
     setFilters,
@@ -32,4 +32,4 @@ export default function HomePage() {
       </div>
     </div>
   )
-}
+} 
