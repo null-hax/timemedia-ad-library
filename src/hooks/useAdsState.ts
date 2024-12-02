@@ -10,10 +10,6 @@ const DEFAULT_FILTER_STATE: FilterState = {
     from: null,
     to: null,
   },
-  mentionsRange: {
-    min: null,
-    max: null,
-  },
   newsletterCount: {
     min: null,
     max: null,

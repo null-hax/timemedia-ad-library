@@ -84,12 +84,6 @@ export function TableView({
       ),
     },
     {
-      id: 'mentions' as const,
-      header: 'Mentions',
-      sortable: true,
-      render: (row: Ad) => row.mentions.toLocaleString(),
-    },
-    {
       id: 'firstSeen' as const,
       header: 'First Seen',
       sortable: true,

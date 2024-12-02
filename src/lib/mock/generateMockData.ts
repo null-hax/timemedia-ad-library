@@ -53,7 +53,6 @@ function generateMockAd(): Ad {
     id: Math.random().toString(36).substr(2, 9),
     companyName: companies[companyIndex],
     adCopy: adTemplate.replace('{product}', product),
-    mentions: Math.floor(Math.random() * 1000) + 1,
     firstSeen,
     lastSeen,
     newsletterCount: Math.floor(Math.random() * 50) + 1,

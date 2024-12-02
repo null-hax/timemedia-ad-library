@@ -24,12 +24,6 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('search') || ''
     const dateFrom = searchParams.get('dateFrom')
     const dateTo = searchParams.get('dateTo')
-    const mentionsMin = searchParams.get('mentionsMin')
-      ? parseInt(searchParams.get('mentionsMin')!)
-      : null
-    const mentionsMax = searchParams.get('mentionsMax')
-      ? parseInt(searchParams.get('mentionsMax')!)
-      : null
     const newslettersMin = searchParams.get('newslettersMin')
       ? parseInt(searchParams.get('newslettersMin')!)
       : null
@@ -59,14 +53,6 @@ export async function GET(request: NextRequest) {
     if (dateTo) {
       const toDate = new Date(dateTo)
       filteredAds = filteredAds.filter((ad) => new Date(ad.firstSeen) <= toDate)
-    }
-
-    // Apply mentions range filter
-    if (mentionsMin !== null) {
-      filteredAds = filteredAds.filter((ad) => ad.mentions >= mentionsMin)
-    }
-    if (mentionsMax !== null) {
-      filteredAds = filteredAds.filter((ad) => ad.mentions <= mentionsMax)
     }
 
     // Apply newsletter count filter

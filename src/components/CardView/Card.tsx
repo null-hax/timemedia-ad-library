@@ -17,10 +17,6 @@ export function AdCard({ ad }: AdCardProps) {
               First seen: {formatDate(ad.firstSeen)}
             </p>
           </div>
-          <div className="text-right">
-            <div className="font-medium">{ad.mentions.toLocaleString()}</div>
-            <div className="text-sm text-muted-foreground">mentions</div>
-          </div>
         </div>
       </CardHeader>
       <CardContent>

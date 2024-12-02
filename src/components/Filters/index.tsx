@@ -17,8 +17,6 @@ export function Filters({ filters, onChange }: FiltersProps) {
     filters.search ||
     filters.dateRange.from ||
     filters.dateRange.to ||
-    filters.mentionsRange.min ||
-    filters.mentionsRange.max ||
     filters.newsletterCount.min ||
     filters.newsletterCount.max
 
@@ -26,7 +24,6 @@ export function Filters({ filters, onChange }: FiltersProps) {
     onChange({
       search: '',
       dateRange: { from: null, to: null },
-      mentionsRange: { min: null, max: null },
       newsletterCount: { min: null, max: null },
     })
   }
@@ -45,15 +42,6 @@ export function Filters({ filters, onChange }: FiltersProps) {
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <div>
-          <label className="text-sm font-medium mb-2 block">Search</label>
-          <Input
-            placeholder="Search companies or ad copy..."
-            value={filters.search}
-            onChange={(e) => onChange({ search: e.target.value })}
-          />
-        </div>
-
-        <div>
           <label className="text-sm font-medium mb-2 block">Date Range</label>
           <DateRangePicker
             from={filters.dateRange.from}
@@ -63,14 +51,15 @@ export function Filters({ filters, onChange }: FiltersProps) {
         </div>
 
         <div>
-          <label className="text-sm font-medium mb-2 block">Mentions</label>
-          <RangeFilter
-            min={filters.mentionsRange.min}
-            max={filters.mentionsRange.max}
-            onChange={(min, max) => onChange({ mentionsRange: { min, max } })}
-            placeholder="Enter mentions count..."
+          <label className="text-sm font-medium mb-2 block">Search</label>
+          <Input
+            placeholder="Search companies or ad copy..."
+            value={filters.search}
+            onChange={(e) => onChange({ search: e.target.value })}
           />
         </div>
+
+
 
         <div>
           <label className="text-sm font-medium mb-2 block">Newsletters</label>

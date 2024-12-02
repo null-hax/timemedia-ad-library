@@ -2,7 +2,6 @@ export interface Ad {
   id: string
   companyName: string
   adCopy: string
-  mentions: number
   firstSeen: string
   lastSeen: string
   newsletterCount: number
@@ -13,10 +12,6 @@ export interface FilterState {
   dateRange: {
     from: string | null
     to: string | null
-  }
-  mentionsRange: {
-    min: number | null
-    max: number | null
   }
   newsletterCount: {
     min: number | null
