@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { generateMockAds } from '@/lib/mock/generateMockData'
-import type { Ad, FilterState, SortState, ApiResponse } from '@/types/ads'
+import type { Ad, ApiResponse } from '@/types/ads'
 
 // Generate mock data once when the API route is initialized
 const TOTAL_MOCK_ADS = 100
@@ -8,11 +8,6 @@ const mockAds = generateMockAds(TOTAL_MOCK_ADS)
 
 export async function GET(request: NextRequest) {
   try {
-    // Add this at the start of the GET function
-    console.log('API Request:', {
-      searchParams: Object.fromEntries(request.nextUrl.searchParams.entries()),
-    })
-
     // Simulate network latency
     await new Promise((resolve) => setTimeout(resolve, 200))
 
@@ -111,8 +106,13 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json(response)
-  } catch (error) {
-    console.error('API Error:', error)
+  } catch (_error) {
+    // Log error in production environments
+    if (process.env.NODE_ENV === 'production') {
+      // Send to error tracking service
+      // Implementation will be added when error tracking service is integrated
+    }
+
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 }

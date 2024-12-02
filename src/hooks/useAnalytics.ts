@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback } from 'react'
+
 type EventName =
   | 'PAGE_VIEW'
   | 'FILTER_CHANGE'
@@ -8,6 +9,7 @@ type EventName =
   | 'VIEW_TOGGLE'
   | 'PAGINATION_CHANGE'
   | 'EMAIL_SUBMIT'
+  | 'ERROR'
 
 interface AnalyticsEvent {
   name: EventName
@@ -15,14 +17,15 @@ interface AnalyticsEvent {
 }
 
 export function useAnalytics() {
-  const trackEvent = useCallback((event: AnalyticsEvent) => {
-    // In development, just log to console
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Analytics Event:', event)
+  const trackEvent = useCallback((_event: AnalyticsEvent) => {
+    // Skip tracking in development environment
+    if (process.env.NODE_ENV !== 'production') {
       return
     }
 
-    // TODO: Implement real analytics tracking
+    // In production, send events to analytics service
+    // Example implementation (replace with actual analytics service):
+    // analyticsService.track(_event.name, _event.properties)
   }, [])
 
   return { trackEvent }

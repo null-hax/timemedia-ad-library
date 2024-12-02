@@ -13,13 +13,13 @@ export function RangeFilter({
   min,
   max,
   onChange,
-  placeholder,
+  placeholder = '',
 }: RangeFilterProps) {
   return (
     <div className="flex gap-2">
       <Input
         type="number"
-        placeholder={`Min`}
+        placeholder={`${placeholder} Min`}
         value={min ?? ''}
         onChange={(e) => {
           const value = e.target.value ? parseInt(e.target.value) : null
@@ -29,7 +29,7 @@ export function RangeFilter({
       />
       <Input
         type="number"
-        placeholder={`Max`}
+        placeholder={`${placeholder} Max`}
         value={max ?? ''}
         onChange={(e) => {
           const value = e.target.value ? parseInt(e.target.value) : null

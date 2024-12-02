@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useSearchParams, useRouter, usePathname } from 'next/navigation'
 
 export function useUrlState<T>(key: string, defaultValue: T) {

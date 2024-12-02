@@ -60,8 +60,7 @@ export function useAds({ filters, sort, pagination }: UseAdsProps) {
 
         setData(json)
       } catch (err) {
-        console.error('Fetch error:', err)
-        setError(err instanceof Error ? err : new Error('An error occurred'))
+        setError(err instanceof Error ? err : new Error('Failed to fetch data'))
       } finally {
         setLoading(false)
       }

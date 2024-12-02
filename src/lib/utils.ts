@@ -7,11 +7,11 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatDate(dateStr: string) {
+  if (!dateStr) return ''
   try {
     const date = parseISO(dateStr)
     return format(date, 'MMM d, yyyy')
-  } catch (error) {
-    console.error('Error formatting date:', dateStr, error)
+  } catch {
     return dateStr
   }
 }

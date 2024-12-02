@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import { useAnalytics } from '@/hooks/useAnalytics'
 
 interface ErrorBoundaryProps {
   error: Error & { digest?: string }
@@ -8,10 +9,20 @@ interface ErrorBoundaryProps {
 }
 
 export default function ErrorBoundary({ error, reset }: ErrorBoundaryProps) {
+  const { trackEvent } = useAnalytics()
+
   useEffect(() => {
-    // Log the error to an error reporting service
-    console.error('Error:', error)
-  }, [error])
+    if (process.env.NODE_ENV === 'production') {
+      trackEvent({
+        name: 'ERROR',
+        properties: {
+          message: error.message,
+          digest: error.digest,
+          stack: error.stack,
+        },
+      })
+    }
+  }, [error, trackEvent])
 
   return (
     <div className="container mx-auto px-4 py-16 text-center">
