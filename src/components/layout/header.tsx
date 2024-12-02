@@ -22,13 +22,13 @@ export function Header() {
         </div>
         <nav className="flex items-center space-x-4">
           <Link
-            href="/about"
+            href="/"
             className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             About
           </Link>
           <Link
-            href="/docs"
+            href="/"
             className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             Documentation

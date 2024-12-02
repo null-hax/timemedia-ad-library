@@ -28,7 +28,9 @@ export function useUrlState<T>(key: string, defaultValue: T) {
         params.set(key, JSON.stringify(newValue))
       }
 
-      router.replace(`${pathname}?${params.toString()}`)
+      router.replace(
+        (pathname + (params.toString() ? `?${params.toString()}` : '')) as any
+      )
     },
     [key, defaultValue, pathname, router, searchParams]
   )
