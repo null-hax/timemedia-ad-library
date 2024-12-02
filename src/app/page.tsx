@@ -1,5 +1,6 @@
 'use client'
 
+import { Suspense } from 'react'
 import { useAdsState } from '@/hooks/useAdsState'
 import { TableView } from '@/components/TableView'
 import { CardView } from '@/components/CardView'
@@ -7,7 +8,7 @@ import { Filters } from '@/components/Filters'
 import { Button } from '@/components/ui/button'
 import { LayoutGrid, Table as TableIcon } from 'lucide-react'
 
-export default function HomePage() {
+function HomeContent() {
   const {
     filters,
     setFilters,
@@ -16,7 +17,7 @@ export default function HomePage() {
     pagination,
     setPagination,
     view,
-    setView
+    setView,
   } = useAdsState()
 
   return (
@@ -42,11 +43,11 @@ export default function HomePage() {
           </Button>
         </div>
       </div>
-      
+
       <div className="mb-8">
         <Filters filters={filters} onChange={setFilters} />
       </div>
-      
+
       <div className="mt-8">
         {view === 'table' ? (
           <TableView
@@ -66,5 +67,15 @@ export default function HomePage() {
         )}
       </div>
     </div>
+  )
+}
+
+export default function HomePage() {
+  return (
+    <Suspense
+      fallback={<div className="container mx-auto px-4 py-8">Loading...</div>}
+    >
+      <HomeContent />
+    </Suspense>
   )
 }

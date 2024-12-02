@@ -28,14 +28,10 @@ export function AdCard({ ad }: AdCardProps) {
           {ad.adCopy}
         </p>
         <div className="flex justify-between text-sm text-muted-foreground">
-          <div>
-            Last seen: {formatDate(ad.lastSeen)}
-          </div>
-          <div>
-            {ad.newsletterCount.toLocaleString()} newsletters
-          </div>
+          <div>Last seen: {formatDate(ad.lastSeen)}</div>
+          <div>{ad.newsletterCount.toLocaleString()} newsletters</div>
         </div>
       </CardContent>
     </Card>
   )
-} 
+}

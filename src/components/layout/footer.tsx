@@ -16,7 +16,7 @@ export function Footer() {
             <h3 className="font-semibold mb-3">Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link 
+                <Link
                   href="/about"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
@@ -24,7 +24,7 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link 
+                <Link
                   href="/docs"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
@@ -32,7 +32,7 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link 
+                <Link
                   href="/privacy"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
@@ -45,7 +45,7 @@ export function Footer() {
             <h3 className="font-semibold mb-3">Connect</h3>
             <ul className="space-y-2">
               <li>
-                <a 
+                <a
                   href={CONFIG.SOCIAL.twitter}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -55,7 +55,7 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a 
+                <a
                   href={CONFIG.SOCIAL.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -68,9 +68,10 @@ export function Footer() {
           </div>
         </div>
         <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} {CONFIG.COMPANY.name}. All rights reserved.
+          © {new Date().getFullYear()} {CONFIG.COMPANY.name}. All rights
+          reserved.
         </div>
       </div>
     </footer>
   )
-} 
+}

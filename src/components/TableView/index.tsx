@@ -1,8 +1,21 @@
 'use client'
 
 import { useAds } from '@/hooks/useAds'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 import { formatDate } from '@/lib/utils'
 import type { Ad, FilterState, SortState, PaginationState } from '@/types/ads'
@@ -21,7 +34,7 @@ export function TableView({
   sort,
   onSort,
   pagination,
-  onPaginationChange
+  onPaginationChange,
 }: TableViewProps) {
   const { data, loading, error } = useAds({ filters, sort, pagination })
 
@@ -56,7 +69,9 @@ export function TableView({
       id: 'companyName' as const,
       header: 'Company',
       sortable: true,
-      render: (row: Ad) => <span className="font-medium">{row.companyName}</span>
+      render: (row: Ad) => (
+        <span className="font-medium">{row.companyName}</span>
+      ),
     },
     {
       id: 'adCopy' as const,
@@ -66,32 +81,32 @@ export function TableView({
         <div className="max-w-md truncate" title={row.adCopy}>
           {row.adCopy}
         </div>
-      )
+      ),
     },
     {
       id: 'mentions' as const,
       header: 'Mentions',
       sortable: true,
-      render: (row: Ad) => row.mentions.toLocaleString()
+      render: (row: Ad) => row.mentions.toLocaleString(),
     },
     {
       id: 'firstSeen' as const,
       header: 'First Seen',
       sortable: true,
-      render: (row: Ad) => formatDate(row.firstSeen)
+      render: (row: Ad) => formatDate(row.firstSeen),
     },
     {
       id: 'lastSeen' as const,
       header: 'Last Seen',
       sortable: true,
-      render: (row: Ad) => formatDate(row.lastSeen)
+      render: (row: Ad) => formatDate(row.lastSeen),
     },
     {
       id: 'newsletterCount' as const,
       header: 'Newsletters',
       sortable: true,
-      render: (row: Ad) => row.newsletterCount.toLocaleString()
-    }
+      render: (row: Ad) => row.newsletterCount.toLocaleString(),
+    },
   ]
 
   return (
@@ -100,16 +115,17 @@ export function TableView({
         <TableHeader>
           <TableRow>
             {columns.map((column) => (
-              <TableHead 
+              <TableHead
                 key={column.id}
                 className={column.sortable ? 'cursor-pointer' : ''}
                 onClick={() => {
                   if (column.sortable) {
                     onSort({
                       field: column.id,
-                      direction: sort.field === column.id && sort.direction === 'asc' 
-                        ? 'desc' 
-                        : 'asc'
+                      direction:
+                        sort.field === column.id && sort.direction === 'asc'
+                          ? 'desc'
+                          : 'asc',
                     })
                   }
                 }}
@@ -128,9 +144,7 @@ export function TableView({
           {data.data.map((row) => (
             <TableRow key={row.id}>
               {columns.map((column) => (
-                <TableCell key={column.id}>
-                  {column.render(row)}
-                </TableCell>
+                <TableCell key={column.id}>{column.render(row)}</TableCell>
               ))}
             </TableRow>
           ))}
@@ -140,7 +154,7 @@ export function TableView({
         <div className="flex items-center gap-2">
           <Select
             value={pagination.pageSize.toString()}
-            onValueChange={(value) => 
+            onValueChange={(value) =>
               onPaginationChange({ pageSize: Number(value), page: 1 })
             }
           >
@@ -169,12 +183,15 @@ export function TableView({
             Previous
           </Button>
           <span className="text-sm">
-            Page {pagination.page} of {Math.ceil(data.total / pagination.pageSize)}
+            Page {pagination.page} of{' '}
+            {Math.ceil(data.total / pagination.pageSize)}
           </span>
           <Button
             variant="outline"
             size="sm"
-            disabled={pagination.page >= Math.ceil(data.total / pagination.pageSize)}
+            disabled={
+              pagination.page >= Math.ceil(data.total / pagination.pageSize)
+            }
             onClick={() => onPaginationChange({ page: pagination.page + 1 })}
           >
             Next

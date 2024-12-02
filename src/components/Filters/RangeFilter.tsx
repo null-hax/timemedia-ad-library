@@ -9,7 +9,12 @@ interface RangeFilterProps {
   placeholder?: string
 }
 
-export function RangeFilter({ min, max, onChange, placeholder }: RangeFilterProps) {
+export function RangeFilter({
+  min,
+  max,
+  onChange,
+  placeholder,
+}: RangeFilterProps) {
   return (
     <div className="flex gap-2">
       <Input
@@ -34,4 +39,4 @@ export function RangeFilter({ min, max, onChange, placeholder }: RangeFilterProp
       />
     </div>
   )
-} 
+}

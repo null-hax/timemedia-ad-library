@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback } from 'react'
-type EventName = 
+type EventName =
   | 'PAGE_VIEW'
   | 'FILTER_CHANGE'
   | 'SORT_CHANGE'
@@ -26,4 +26,4 @@ export function useAnalytics() {
   }, [])
 
   return { trackEvent }
-} 
+}

@@ -17,18 +17,21 @@ export function useUrlState<T>(key: string, defaultValue: T) {
     }
   })
 
-  const setValue = useCallback((newValue: T) => {
-    setState(newValue)
-    const params = new URLSearchParams(searchParams.toString())
-    
-    if (newValue === defaultValue) {
-      params.delete(key)
-    } else {
-      params.set(key, JSON.stringify(newValue))
-    }
-    
-    router.replace(`${pathname}?${params.toString()}`)
-  }, [key, defaultValue, pathname, router, searchParams])
+  const setValue = useCallback(
+    (newValue: T) => {
+      setState(newValue)
+      const params = new URLSearchParams(searchParams.toString())
+
+      if (newValue === defaultValue) {
+        params.delete(key)
+      } else {
+        params.set(key, JSON.stringify(newValue))
+      }
+
+      router.replace(`${pathname}?${params.toString()}`)
+    },
+    [key, defaultValue, pathname, router, searchParams]
+  )
 
   return [state, setValue] as const
-} 
+}

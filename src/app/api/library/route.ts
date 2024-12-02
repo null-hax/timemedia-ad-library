@@ -8,70 +8,82 @@ const mockAds = generateMockAds(TOTAL_MOCK_ADS)
 
 export async function GET(request: NextRequest) {
   try {
-
     // Add this at the start of the GET function
     console.log('API Request:', {
-      searchParams: Object.fromEntries(request.nextUrl.searchParams.entries())
+      searchParams: Object.fromEntries(request.nextUrl.searchParams.entries()),
     })
 
     // Simulate network latency
-    await new Promise(resolve => setTimeout(resolve, 200))
+    await new Promise((resolve) => setTimeout(resolve, 200))
 
     // Get query parameters
     const searchParams = request.nextUrl.searchParams
     const page = parseInt(searchParams.get('page') || '1')
     const pageSize = parseInt(searchParams.get('pageSize') || '20')
-    const sortField = searchParams.get('sortField') as keyof Ad || 'companyName'
-    const sortDirection = searchParams.get('sortDirection') as 'asc' | 'desc' || 'asc'
-    
+    const sortField =
+      (searchParams.get('sortField') as keyof Ad) || 'companyName'
+    const sortDirection =
+      (searchParams.get('sortDirection') as 'asc' | 'desc') || 'asc'
+
     // Get all filter parameters
     const search = searchParams.get('search') || ''
     const dateFrom = searchParams.get('dateFrom')
     const dateTo = searchParams.get('dateTo')
-    const mentionsMin = searchParams.get('mentionsMin') ? parseInt(searchParams.get('mentionsMin')!) : null
-    const mentionsMax = searchParams.get('mentionsMax') ? parseInt(searchParams.get('mentionsMax')!) : null
-    const newslettersMin = searchParams.get('newslettersMin') ? parseInt(searchParams.get('newslettersMin')!) : null
-    const newslettersMax = searchParams.get('newslettersMax') ? parseInt(searchParams.get('newslettersMax')!) : null
+    const mentionsMin = searchParams.get('mentionsMin')
+      ? parseInt(searchParams.get('mentionsMin')!)
+      : null
+    const mentionsMax = searchParams.get('mentionsMax')
+      ? parseInt(searchParams.get('mentionsMax')!)
+      : null
+    const newslettersMin = searchParams.get('newslettersMin')
+      ? parseInt(searchParams.get('newslettersMin')!)
+      : null
+    const newslettersMax = searchParams.get('newslettersMax')
+      ? parseInt(searchParams.get('newslettersMax')!)
+      : null
 
     let filteredAds = [...mockAds]
 
     // Apply search filter
     if (search) {
       const searchLower = search.toLowerCase()
-      filteredAds = filteredAds.filter(ad => 
-        ad.companyName.toLowerCase().includes(searchLower) ||
-        ad.adCopy.toLowerCase().includes(searchLower)
+      filteredAds = filteredAds.filter(
+        (ad) =>
+          ad.companyName.toLowerCase().includes(searchLower) ||
+          ad.adCopy.toLowerCase().includes(searchLower)
       )
     }
 
     // Apply date range filter
     if (dateFrom) {
       const fromDate = new Date(dateFrom)
-      filteredAds = filteredAds.filter(ad => 
-        new Date(ad.lastSeen) >= fromDate
+      filteredAds = filteredAds.filter(
+        (ad) => new Date(ad.lastSeen) >= fromDate
       )
     }
     if (dateTo) {
       const toDate = new Date(dateTo)
-      filteredAds = filteredAds.filter(ad => 
-        new Date(ad.firstSeen) <= toDate
-      )
+      filteredAds = filteredAds.filter((ad) => new Date(ad.firstSeen) <= toDate)
     }
 
     // Apply mentions range filter
     if (mentionsMin !== null) {
-      filteredAds = filteredAds.filter(ad => ad.mentions >= mentionsMin)
+      filteredAds = filteredAds.filter((ad) => ad.mentions >= mentionsMin)
     }
     if (mentionsMax !== null) {
-      filteredAds = filteredAds.filter(ad => ad.mentions <= mentionsMax)
+      filteredAds = filteredAds.filter((ad) => ad.mentions <= mentionsMax)
     }
 
     // Apply newsletter count filter
     if (newslettersMin !== null) {
-      filteredAds = filteredAds.filter(ad => ad.newsletterCount >= newslettersMin)
+      filteredAds = filteredAds.filter(
+        (ad) => ad.newsletterCount >= newslettersMin
+      )
     }
     if (newslettersMax !== null) {
-      filteredAds = filteredAds.filter(ad => ad.newsletterCount <= newslettersMax)
+      filteredAds = filteredAds.filter(
+        (ad) => ad.newsletterCount <= newslettersMax
+      )
     }
 
     // Apply sorting
@@ -95,7 +107,7 @@ export async function GET(request: NextRequest) {
       data: paginatedAds,
       total,
       page,
-      pageSize
+      pageSize,
     }
 
     return NextResponse.json(response)
@@ -106,4 +118,4 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     )
   }
-} 
+}

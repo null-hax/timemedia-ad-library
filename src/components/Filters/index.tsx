@@ -13,9 +13,9 @@ interface FiltersProps {
 }
 
 export function Filters({ filters, onChange }: FiltersProps) {
-  const hasActiveFilters = 
-    filters.search || 
-    filters.dateRange.from || 
+  const hasActiveFilters =
+    filters.search ||
+    filters.dateRange.from ||
     filters.dateRange.to ||
     filters.mentionsRange.min ||
     filters.mentionsRange.max ||
@@ -27,7 +27,7 @@ export function Filters({ filters, onChange }: FiltersProps) {
       search: '',
       dateRange: { from: null, to: null },
       mentionsRange: { min: null, max: null },
-      newsletterCount: { min: null, max: null }
+      newsletterCount: { min: null, max: null },
     })
   }
 
@@ -36,22 +36,16 @@ export function Filters({ filters, onChange }: FiltersProps) {
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold">Filters</h2>
         {hasActiveFilters && (
-          <Button 
-            variant="ghost" 
-            size="sm"
-            onClick={handleClearFilters}
-          >
+          <Button variant="ghost" size="sm" onClick={handleClearFilters}>
             <X className="h-4 w-4 mr-2" />
             Clear filters
           </Button>
         )}
       </div>
-      
+
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <div>
-          <label className="text-sm font-medium mb-2 block">
-            Search
-          </label>
+          <label className="text-sm font-medium mb-2 block">Search</label>
           <Input
             placeholder="Search companies or ad copy..."
             value={filters.search}
@@ -60,9 +54,7 @@ export function Filters({ filters, onChange }: FiltersProps) {
         </div>
 
         <div>
-          <label className="text-sm font-medium mb-2 block">
-            Date Range
-          </label>
+          <label className="text-sm font-medium mb-2 block">Date Range</label>
           <DateRangePicker
             from={filters.dateRange.from}
             to={filters.dateRange.to}
@@ -71,9 +63,7 @@ export function Filters({ filters, onChange }: FiltersProps) {
         </div>
 
         <div>
-          <label className="text-sm font-medium mb-2 block">
-            Mentions
-          </label>
+          <label className="text-sm font-medium mb-2 block">Mentions</label>
           <RangeFilter
             min={filters.mentionsRange.min}
             max={filters.mentionsRange.max}
@@ -83,9 +73,7 @@ export function Filters({ filters, onChange }: FiltersProps) {
         </div>
 
         <div>
-          <label className="text-sm font-medium mb-2 block">
-            Newsletters
-          </label>
+          <label className="text-sm font-medium mb-2 block">Newsletters</label>
           <RangeFilter
             min={filters.newsletterCount.min}
             max={filters.newsletterCount.max}
@@ -96,4 +84,4 @@ export function Filters({ filters, onChange }: FiltersProps) {
       </div>
     </div>
   )
-} 
+}

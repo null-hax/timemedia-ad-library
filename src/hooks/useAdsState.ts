@@ -8,42 +8,45 @@ const DEFAULT_FILTER_STATE: FilterState = {
   search: '',
   dateRange: {
     from: null,
-    to: null
+    to: null,
   },
   mentionsRange: {
     min: null,
-    max: null
+    max: null,
   },
   newsletterCount: {
     min: null,
-    max: null
-  }
+    max: null,
+  },
 }
 
 const DEFAULT_SORT_STATE: SortState = {
   field: 'companyName',
-  direction: 'asc'
+  direction: 'asc',
 }
 
 const DEFAULT_PAGINATION_STATE: PaginationState = {
   page: 1,
-  pageSize: 20
+  pageSize: 20,
 }
 
 export function useAdsState() {
   const { trackEvent } = useAnalytics()
-  
+
   const [filters, setFilters] = useUrlState('filters', DEFAULT_FILTER_STATE)
   const [sort, setSort] = useUrlState('sort', DEFAULT_SORT_STATE)
-  const [pagination, setPagination] = useUrlState('pagination', DEFAULT_PAGINATION_STATE)
+  const [pagination, setPagination] = useUrlState(
+    'pagination',
+    DEFAULT_PAGINATION_STATE
+  )
   const [view, setView] = useUrlState('view', 'table' as 'table' | 'card')
 
   const handleFilterChange = (newFilters: Partial<FilterState>) => {
     setFilters({ ...filters, ...newFilters })
     setPagination({ ...pagination, page: 1 }) // Reset to first page
-    trackEvent({ 
+    trackEvent({
       name: 'FILTER_CHANGE',
-      properties: { filters: newFilters }
+      properties: { filters: newFilters },
     })
   }
 
@@ -51,7 +54,7 @@ export function useAdsState() {
     setSort(newSort)
     trackEvent({
       name: 'SORT_CHANGE',
-      properties: { sort: newSort }
+      properties: { sort: newSort },
     })
   }
 
@@ -59,7 +62,7 @@ export function useAdsState() {
     setPagination({ ...pagination, ...newPagination })
     trackEvent({
       name: 'PAGINATION_CHANGE',
-      properties: { pagination: newPagination }
+      properties: { pagination: newPagination },
     })
   }
 
@@ -67,7 +70,7 @@ export function useAdsState() {
     setView(newView)
     trackEvent({
       name: 'VIEW_TOGGLE',
-      properties: { view: newView }
+      properties: { view: newView },
     })
   }
 
@@ -79,6 +82,6 @@ export function useAdsState() {
     pagination,
     setPagination: handlePaginationChange,
     view,
-    setView: handleViewChange
+    setView: handleViewChange,
   }
-} 
+}

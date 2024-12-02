@@ -1,7 +1,13 @@
-"use client"
+'use client'
 
 import { useState } from 'react'
-import { addMonths, format, startOfMonth, endOfMonth, eachDayOfInterval } from 'date-fns'
+import {
+  addMonths,
+  format,
+  startOfMonth,
+  endOfMonth,
+  eachDayOfInterval,
+} from 'date-fns'
 import { Button } from '@/components/ui/button'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
@@ -16,7 +22,7 @@ export function Calendar({ selected, onSelect }: CalendarProps) {
 
   const days = eachDayOfInterval({
     start: startOfMonth(currentMonth),
-    end: endOfMonth(currentMonth)
+    end: endOfMonth(currentMonth),
   })
 
   const handleDateClick = (date: Date) => {
@@ -35,9 +41,23 @@ export function Calendar({ selected, onSelect }: CalendarProps) {
 
   const isSelected = (date: Date) => {
     if (!selected?.from && !selected?.to) return false
-    if (selected.from && format(date, 'yyyy-MM-dd') === format(selected.from, 'yyyy-MM-dd')) return true
-    if (selected.to && format(date, 'yyyy-MM-dd') === format(selected.to, 'yyyy-MM-dd')) return true
-    if (selected.from && selected.to && date > selected.from && date < selected.to) return true
+    if (
+      selected.from &&
+      format(date, 'yyyy-MM-dd') === format(selected.from, 'yyyy-MM-dd')
+    )
+      return true
+    if (
+      selected.to &&
+      format(date, 'yyyy-MM-dd') === format(selected.to, 'yyyy-MM-dd')
+    )
+      return true
+    if (
+      selected.from &&
+      selected.to &&
+      date > selected.from &&
+      date < selected.to
+    )
+      return true
     return false
   }
 
@@ -47,28 +67,29 @@ export function Calendar({ selected, onSelect }: CalendarProps) {
         <Button
           variant="outline"
           size="icon"
-          onClick={() => setCurrentMonth(prev => addMonths(prev, -1))}
+          onClick={() => setCurrentMonth((prev) => addMonths(prev, -1))}
         >
           <ChevronLeft className="h-4 w-4" />
         </Button>
-        <div className="font-semibold">
-          {format(currentMonth, 'MMMM yyyy')}
-        </div>
+        <div className="font-semibold">{format(currentMonth, 'MMMM yyyy')}</div>
         <Button
           variant="outline"
           size="icon"
-          onClick={() => setCurrentMonth(prev => addMonths(prev, 1))}
+          onClick={() => setCurrentMonth((prev) => addMonths(prev, 1))}
         >
           <ChevronRight className="h-4 w-4" />
         </Button>
       </div>
       <div className="grid grid-cols-7 gap-1">
-        {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(day => (
-          <div key={day} className="text-center text-sm font-medium text-muted-foreground">
+        {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map((day) => (
+          <div
+            key={day}
+            className="text-center text-sm font-medium text-muted-foreground"
+          >
             {day}
           </div>
         ))}
-        {days.map(day => (
+        {days.map((day) => (
           <Button
             key={day.toISOString()}
             variant={isSelected(day) ? 'default' : 'ghost'}

@@ -7,10 +7,7 @@ interface ErrorBoundaryProps {
   reset: () => void
 }
 
-export default function ErrorBoundary({
-  error,
-  reset,
-}: ErrorBoundaryProps) {
+export default function ErrorBoundary({ error, reset }: ErrorBoundaryProps) {
   useEffect(() => {
     // Log the error to an error reporting service
     console.error('Error:', error)
@@ -30,4 +27,4 @@ export default function ErrorBoundary({
       </button>
     </div>
   )
-} 
+}

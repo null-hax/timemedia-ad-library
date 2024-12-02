@@ -3,7 +3,13 @@
 import { useAds } from '@/hooks/useAds'
 import { AdCard } from './Card'
 import { Button } from '@/components/ui/button'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import type { FilterState, SortState, PaginationState } from '@/types/ads'
 
 interface CardViewProps {
@@ -17,7 +23,7 @@ export function CardView({
   filters,
   sort,
   pagination,
-  onPaginationChange
+  onPaginationChange,
 }: CardViewProps) {
   const { data, loading, error } = useAds({ filters, sort, pagination })
 
@@ -33,7 +39,10 @@ export function CardView({
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {Array.from({ length: pagination.pageSize }).map((_, i) => (
-          <div key={i} className="h-[200px] bg-muted animate-pulse rounded-lg" />
+          <div
+            key={i}
+            className="h-[200px] bg-muted animate-pulse rounded-lg"
+          />
         ))}
       </div>
     )
@@ -59,7 +68,7 @@ export function CardView({
         <div className="flex items-center gap-2">
           <Select
             value={pagination.pageSize.toString()}
-            onValueChange={(value) => 
+            onValueChange={(value) =>
               onPaginationChange({ pageSize: Number(value), page: 1 })
             }
           >
@@ -88,12 +97,15 @@ export function CardView({
             Previous
           </Button>
           <span className="text-sm">
-            Page {pagination.page} of {Math.ceil(data.total / pagination.pageSize)}
+            Page {pagination.page} of{' '}
+            {Math.ceil(data.total / pagination.pageSize)}
           </span>
           <Button
             variant="outline"
             size="sm"
-            disabled={pagination.page >= Math.ceil(data.total / pagination.pageSize)}
+            disabled={
+              pagination.page >= Math.ceil(data.total / pagination.pageSize)
+            }
             onClick={() => onPaginationChange({ page: pagination.page + 1 })}
           >
             Next
@@ -102,4 +114,4 @@ export function CardView({
       </div>
     </div>
   )
-} 
+}

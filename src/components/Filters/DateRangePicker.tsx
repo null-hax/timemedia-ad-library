@@ -20,7 +20,7 @@ interface DateRangePickerProps {
 export function DateRangePicker({ from, to, onChange }: DateRangePickerProps) {
   const selected = {
     from: from ? new Date(from) : undefined,
-    to: to ? new Date(to) : undefined
+    to: to ? new Date(to) : undefined,
   }
 
   const hasValue = from || to
@@ -40,7 +40,8 @@ export function DateRangePicker({ from, to, onChange }: DateRangePickerProps) {
             {from ? (
               to ? (
                 <>
-                  {format(new Date(from), 'LLL dd, y')} - {format(new Date(to), 'LLL dd, y')}
+                  {format(new Date(from), 'LLL dd, y')} -{' '}
+                  {format(new Date(to), 'LLL dd, y')}
                 </>
               ) : (
                 format(new Date(from), 'LLL dd, y')
@@ -74,4 +75,4 @@ export function DateRangePicker({ from, to, onChange }: DateRangePickerProps) {
       )}
     </div>
   )
-} 
+}
