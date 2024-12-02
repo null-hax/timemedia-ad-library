@@ -23,9 +23,16 @@ export async function GET(request: NextRequest) {
     const pageSize = parseInt(searchParams.get('pageSize') || '20')
     const sortField = searchParams.get('sortField') as keyof Ad || 'companyName'
     const sortDirection = searchParams.get('sortDirection') as 'asc' | 'desc' || 'asc'
+    
+    // Get all filter parameters
     const search = searchParams.get('search') || ''
+    const dateFrom = searchParams.get('dateFrom')
+    const dateTo = searchParams.get('dateTo')
+    const mentionsMin = searchParams.get('mentionsMin') ? parseInt(searchParams.get('mentionsMin')!) : null
+    const mentionsMax = searchParams.get('mentionsMax') ? parseInt(searchParams.get('mentionsMax')!) : null
+    const newslettersMin = searchParams.get('newslettersMin') ? parseInt(searchParams.get('newslettersMin')!) : null
+    const newslettersMax = searchParams.get('newslettersMax') ? parseInt(searchParams.get('newslettersMax')!) : null
 
-    // Filter ads
     let filteredAds = [...mockAds]
 
     // Apply search filter
@@ -35,6 +42,36 @@ export async function GET(request: NextRequest) {
         ad.companyName.toLowerCase().includes(searchLower) ||
         ad.adCopy.toLowerCase().includes(searchLower)
       )
+    }
+
+    // Apply date range filter
+    if (dateFrom) {
+      const fromDate = new Date(dateFrom)
+      filteredAds = filteredAds.filter(ad => 
+        new Date(ad.lastSeen) >= fromDate
+      )
+    }
+    if (dateTo) {
+      const toDate = new Date(dateTo)
+      filteredAds = filteredAds.filter(ad => 
+        new Date(ad.firstSeen) <= toDate
+      )
+    }
+
+    // Apply mentions range filter
+    if (mentionsMin !== null) {
+      filteredAds = filteredAds.filter(ad => ad.mentions >= mentionsMin)
+    }
+    if (mentionsMax !== null) {
+      filteredAds = filteredAds.filter(ad => ad.mentions <= mentionsMax)
+    }
+
+    // Apply newsletter count filter
+    if (newslettersMin !== null) {
+      filteredAds = filteredAds.filter(ad => ad.newsletterCount >= newslettersMin)
+    }
+    if (newslettersMax !== null) {
+      filteredAds = filteredAds.filter(ad => ad.newsletterCount <= newslettersMax)
     }
 
     // Apply sorting

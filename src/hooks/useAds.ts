@@ -23,7 +23,21 @@ export function useAds({ filters, sort, pagination }: UseAdsProps) {
           pageSize: pagination.pageSize.toString(),
           sortField: sort.field,
           sortDirection: sort.direction,
-          ...(filters.search && { search: filters.search })
+          ...(filters.search && { search: filters.search }),
+          ...(filters.dateRange.from && { dateFrom: filters.dateRange.from }),
+          ...(filters.dateRange.to && { dateTo: filters.dateRange.to }),
+          ...(filters.mentionsRange.min !== null && { 
+            mentionsMin: filters.mentionsRange.min.toString() 
+          }),
+          ...(filters.mentionsRange.max !== null && { 
+            mentionsMax: filters.mentionsRange.max.toString() 
+          }),
+          ...(filters.newsletterCount.min !== null && { 
+            newslettersMin: filters.newsletterCount.min.toString() 
+          }),
+          ...(filters.newsletterCount.max !== null && { 
+            newslettersMax: filters.newsletterCount.max.toString() 
+          })
         })
 
         const response = await fetch(`/api/ads?${params}`)
