@@ -1,10 +1,10 @@
 'use client'
 
-import { useUrlState } from './useUrlState'
+import { useState, useCallback } from 'react'
 import { useAnalytics } from './useAnalytics'
-import type { FilterState, SortState, PaginationState } from '@/types/ads'
+import type { FilterState, SortState, PaginationState, ViewType } from '@/types/ads'
 
-const DEFAULT_FILTER_STATE: FilterState = {
+export const DEFAULT_FILTER_STATE: FilterState = {
   search: '',
   dateRange: {
     from: null,
@@ -30,55 +30,61 @@ const DEFAULT_PAGINATION_STATE: PaginationState = {
 export function useAdsState() {
   const { trackEvent } = useAnalytics()
 
-  const [filters, setFilters] = useUrlState('filters', DEFAULT_FILTER_STATE)
-  const [sort, setSort] = useUrlState('sort', DEFAULT_SORT_STATE)
-  const [pagination, setPagination] = useUrlState(
-    'pagination',
-    DEFAULT_PAGINATION_STATE
-  )
-  const [view, setView] = useUrlState('view', 'card' as 'card' | 'table')
+  const [view, setView] = useState<ViewType>('card')
+  const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTER_STATE)
+  const [sort, setSort] = useState<SortState>(DEFAULT_SORT_STATE)
+  const [pagination, setPagination] = useState<PaginationState>(DEFAULT_PAGINATION_STATE)
 
-  const handleFilterChange = (newFilters: Partial<FilterState>) => {
-    setFilters((prev) => ({ ...prev, ...newFilters }))
-    setPagination((prev) => ({ ...prev, page: 1 })) // Reset to first page
-    trackEvent({
-      name: 'FILTER_CHANGE',
-      properties: { filters: newFilters },
-    })
-  }
-
-  const handleSortChange = (newSort: SortState) => {
-    setSort(newSort)
-    trackEvent({
-      name: 'SORT_CHANGE',
-      properties: { sort: newSort },
-    })
-  }
-
-  const handlePaginationChange = (newPagination: Partial<PaginationState>) => {
-    setPagination((prev) => ({ ...prev, ...newPagination }))
-    trackEvent({
-      name: 'PAGINATION_CHANGE',
-      properties: { pagination: newPagination },
-    })
-  }
-
-  const handleViewChange = (newView: 'card' | 'table') => {
+  const setViewMemoized = useCallback((newView: ViewType) => {
     setView(newView)
     trackEvent({
       name: 'VIEW_TOGGLE',
       properties: { view: newView },
     })
-  }
+  }, [trackEvent])
+
+  const setFiltersMemoized = useCallback((newFilters: Partial<FilterState>) => {
+    setFilters(prev => {
+      const updated = {
+        ...prev,
+        ...newFilters,
+      }
+      trackEvent({
+        name: 'FILTER_CHANGE',
+        properties: { filters: newFilters },
+      })
+      return updated
+    })
+    setPagination(prev => ({ ...prev, page: 1 }))
+  }, [trackEvent])
+
+  const setSortMemoized = useCallback((newSort: SortState) => {
+    setSort(newSort)
+    trackEvent({
+      name: 'SORT_CHANGE',
+      properties: { sort: newSort },
+    })
+  }, [trackEvent])
+
+  const setPaginationMemoized = useCallback((newPagination: Partial<PaginationState>) => {
+    setPagination(prev => {
+      const updated = { ...prev, ...newPagination }
+      trackEvent({
+        name: 'PAGINATION_CHANGE',
+        properties: { pagination: newPagination },
+      })
+      return updated
+    })
+  }, [trackEvent])
 
   return {
     filters,
-    setFilters: handleFilterChange,
+    setFilters: setFiltersMemoized,
     sort,
-    setSort: handleSortChange,
+    setSort: setSortMemoized,
     pagination,
-    setPagination: handlePaginationChange,
+    setPagination: setPaginationMemoized,
     view,
-    setView: handleViewChange,
+    setView: setViewMemoized,
   }
 }

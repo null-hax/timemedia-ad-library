@@ -1,6 +1,5 @@
 'use client'
 
-import { useAds } from '@/hooks/useAds'
 import {
   Table,
   TableBody,
@@ -30,6 +29,9 @@ interface TableViewProps {
   pagination: PaginationState
   onPaginationChange: (pagination: Partial<PaginationState>) => void
   onTagClick?: (tag: string) => void
+  data: { data: Ad[]; total: number } | undefined
+  loading: boolean
+  error: Error | null
 }
 
 export function TableView({
@@ -39,9 +41,10 @@ export function TableView({
   pagination,
   onPaginationChange,
   onTagClick,
+  data,
+  loading,
+  error,
 }: TableViewProps) {
-  const { data, loading, error } = useAds({ filters, sort, pagination })
-
   if (error) {
     return (
       <div className="text-center py-8 text-red-500">

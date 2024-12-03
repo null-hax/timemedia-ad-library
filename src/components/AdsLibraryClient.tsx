@@ -6,6 +6,8 @@ import { Filters } from '@/components/Filters'
 import { ViewToggle } from '@/components/ViewToggle'
 import { Hero } from '@/components/Hero'
 import { useAdsState } from '@/hooks/useAdsState'
+import { useAds } from '@/hooks/useAds'
+import { useCallback } from 'react'
 
 export default function AdsLibraryClient() {
   const {
@@ -19,7 +21,14 @@ export default function AdsLibraryClient() {
     setView,
   } = useAdsState()
 
-  const handleTagClick = (tag: string) => {
+  // Fetch data at the parent level to share between views
+  const { data, loading, error } = useAds({
+    filters,
+    sort,
+    pagination,
+  })
+
+  const handleTagClick = useCallback((tag: string) => {
     const currentTags = filters.tags || []
     if (!currentTags.includes(tag)) {
       setFilters({
@@ -27,7 +36,7 @@ export default function AdsLibraryClient() {
         tags: [...currentTags, tag],
       })
     }
-  }
+  }, [filters, setFilters])
 
   return (
     <div className="min-h-screen">
@@ -45,6 +54,9 @@ export default function AdsLibraryClient() {
             pagination={pagination}
             onPaginationChange={setPagination}
             onTagClick={handleTagClick}
+            data={data}
+            loading={loading}
+            error={error}
           />
         ) : (
           <CardView
@@ -52,6 +64,9 @@ export default function AdsLibraryClient() {
             pagination={pagination}
             onPaginationChange={setPagination}
             onTagClick={handleTagClick}
+            data={data}
+            loading={loading}
+            error={error}
           />
         )}
       </div>

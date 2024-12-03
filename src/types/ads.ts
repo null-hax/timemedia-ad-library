@@ -9,18 +9,19 @@ export interface Ad {
   image?: string
 }
 
+export type ViewType = 'table' | 'card'
+
 export interface FilterState {
   search: string
   dateRange: {
     from: string | null
     to: string | null
-  }
-  newsletterCount: {
+  } | null
+  newsletterCount?: {
     min: number | null
     max: number | null
   }
-  tags?: string[]
-  newsletters?: string[]
+  tags: string[]
 }
 
 export interface SortState {

@@ -1,6 +1,5 @@
 'use client'
 
-import { useAds } from '@/hooks/useAds'
 import { Ad, FilterState, PaginationState, SortState } from '@/types/ads'
 import { AdCard } from './Card'
 import { Button } from '@/components/ui/button'
@@ -11,6 +10,9 @@ interface CardViewProps {
   pagination: PaginationState
   onPaginationChange: (pagination: Partial<PaginationState>) => void
   onTagClick?: (tag: string) => void
+  data: { data: Ad[]; total: number } | undefined
+  loading: boolean
+  error: Error | null
 }
 
 export function CardView({
@@ -18,19 +20,10 @@ export function CardView({
   pagination,
   onPaginationChange,
   onTagClick,
+  data,
+  loading,
+  error,
 }: CardViewProps) {
-  // Memoize the sort configuration to prevent unnecessary re-renders
-  const sort = useMemo<SortState>(
-    () => ({ field: 'date', direction: 'desc' }),
-    []
-  )
-
-  const { data, loading, error } = useAds({
-    filters,
-    sort,
-    pagination,
-  })
-
   if (error) {
     return (
       <div className="text-center py-8 text-red-500">
