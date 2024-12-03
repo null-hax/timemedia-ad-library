@@ -27,4 +27,4 @@ export function ViewToggle({ value, onChange }: ViewToggleProps) {
       </Button>
     </div>
   )
-} 
+}

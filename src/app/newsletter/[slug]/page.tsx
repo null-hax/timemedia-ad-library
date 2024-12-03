@@ -8,19 +8,19 @@ import { useParams } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 
 export default function NewsletterPage() {
-  const params = useParams();
-  const slug = params.slug as string;
-  const router = useRouter();
-  
-  const newsletter = newsletters.find(n => n.slug === slug);
-  
+  const params = useParams()
+  const slug = params.slug as string
+  const router = useRouter()
+
+  const newsletter = newsletters.find((n) => n.slug === slug)
+
   if (!newsletter) {
-    notFound();
+    notFound()
   }
 
-  const ads = generateMockAds(100).filter(ad => 
-    ad.newsletters.some(n => n.id === newsletter.id)
-  );
+  const ads = generateMockAds(100).filter((ad) =>
+    ad.newsletters.some((n) => n.id === newsletter.id)
+  )
 
   const handleTagClick = (tag: string) => {
     router.push(`/?tags=${tag}`)
@@ -46,11 +46,11 @@ export default function NewsletterPage() {
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold">Recent Ads</h2>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {ads.map(ad => (
+          {ads.map((ad) => (
             <AdCard key={ad.id} ad={ad} onTagClick={handleTagClick} />
           ))}
         </div>
       </section>
     </div>
   )
-} 
+}

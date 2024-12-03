@@ -1,16 +1,27 @@
 'use client'
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Newsletter } from "@/types/ads"
-import Link from "next/link"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+import { Newsletter } from '@/types/ads'
+import Link from 'next/link'
 
 interface NewsletterListModalProps {
   newsletters: Newsletter[]
   children?: React.ReactNode
 }
 
-export function NewsletterListModal({ newsletters, children }: NewsletterListModalProps) {
-  const sortedNewsletters = [...newsletters].sort((a, b) => a.traffic_rank - b.traffic_rank)
+export function NewsletterListModal({
+  newsletters,
+  children,
+}: NewsletterListModalProps) {
+  const sortedNewsletters = [...newsletters].sort(
+    (a, b) => a.traffic_rank - b.traffic_rank
+  )
 
   return (
     <Dialog>
@@ -27,9 +38,12 @@ export function NewsletterListModal({ newsletters, children }: NewsletterListMod
         </DialogHeader>
         <div className="mt-4">
           <ul className="space-y-3">
-            {sortedNewsletters.map(newsletter => (
-              <li key={newsletter.id} className="flex items-center justify-between">
-                <Link 
+            {sortedNewsletters.map((newsletter) => (
+              <li
+                key={newsletter.id}
+                className="flex items-center justify-between"
+              >
+                <Link
                   href={`/newsletter/${newsletter.slug}`}
                   className="hover:text-blue-600 transition-colors"
                 >

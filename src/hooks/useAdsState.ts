@@ -39,8 +39,8 @@ export function useAdsState() {
   const [view, setView] = useUrlState('view', 'table' as 'table' | 'card')
 
   const handleFilterChange = (newFilters: Partial<FilterState>) => {
-    setFilters(prev => ({ ...prev, ...newFilters }))
-    setPagination(prev => ({ ...prev, page: 1 })) // Reset to first page
+    setFilters((prev) => ({ ...prev, ...newFilters }))
+    setPagination((prev) => ({ ...prev, page: 1 })) // Reset to first page
     trackEvent({
       name: 'FILTER_CHANGE',
       properties: { filters: newFilters },
@@ -56,7 +56,7 @@ export function useAdsState() {
   }
 
   const handlePaginationChange = (newPagination: Partial<PaginationState>) => {
-    setPagination(prev => ({ ...prev, ...newPagination }))
+    setPagination((prev) => ({ ...prev, ...newPagination }))
     trackEvent({
       name: 'PAGINATION_CHANGE',
       properties: { pagination: newPagination },

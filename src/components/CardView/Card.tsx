@@ -22,14 +22,14 @@ export function AdCard({ ad, onTagClick }: AdCardProps) {
       <CardHeader>
         <div className="flex justify-between items-start gap-4">
           <div className="flex-1">
-            <Link 
+            <Link
               href={`/company/${ad.company.slug}`}
               className="inline-block hover:text-blue-600"
             >
               <h3 className="font-semibold text-lg">{ad.companyName}</h3>
             </Link>
             <div className="flex flex-wrap gap-1 mt-2">
-              {ad.company.tags.map(tag => (
+              {ad.company.tags.map((tag) => (
                 <Badge
                   key={tag}
                   variant="secondary"
@@ -67,7 +67,7 @@ export function AdCard({ ad, onTagClick }: AdCardProps) {
               Appeared in {ad.newsletters.length} newsletters:
             </div>
             <div className="space-y-1">
-              {topNewsletters.map(newsletter => (
+              {topNewsletters.map((newsletter) => (
                 <Link
                   key={newsletter.id}
                   href={`/newsletter/${newsletter.slug}`}

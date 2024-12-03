@@ -5,15 +5,15 @@ export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  const newsletter = newsletters.find(n => n.id === params.id)
-  
+  const newsletter = newsletters.find((n) => n.id === params.id)
+
   if (!newsletter) {
     return new Response('Newsletter not found', { status: 404 })
   }
 
   // Get all ads that appeared in this newsletter
-  const ads = generateMockAds(100).filter(ad => 
-    ad.newsletters.some(n => n.id === params.id)
+  const ads = generateMockAds(100).filter((ad) =>
+    ad.newsletters.some((n) => n.id === params.id)
   )
 
   const response: ApiResponse<{
@@ -30,4 +30,4 @@ export async function GET(
   }
 
   return Response.json(response)
-} 
+}

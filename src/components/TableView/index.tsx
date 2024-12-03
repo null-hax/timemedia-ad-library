@@ -75,14 +75,14 @@ export function TableView({
       sortable: true,
       render: (row: Ad) => (
         <div className="space-y-1">
-          <Link 
+          <Link
             href={`/company/${row.company.slug}`}
             className="font-medium hover:text-blue-600"
           >
             {row.companyName}
           </Link>
           <div className="flex flex-wrap gap-1">
-            {row.company.tags.map(tag => (
+            {row.company.tags.map((tag) => (
               <Badge
                 key={tag}
                 variant="secondary"
@@ -117,9 +117,10 @@ export function TableView({
       header: 'Newsletters',
       sortable: true,
       render: (row: Ad) => {
-        const sortedNewsletters = [...row.newsletters]
-          .sort((a, b) => a.traffic_rank - b.traffic_rank)
-        
+        const sortedNewsletters = [...row.newsletters].sort(
+          (a, b) => a.traffic_rank - b.traffic_rank
+        )
+
         return (
           <NewsletterListModal newsletters={sortedNewsletters}>
             <button className="font-medium hover:text-blue-600">

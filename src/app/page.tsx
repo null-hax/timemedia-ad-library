@@ -32,7 +32,7 @@ export default function AdsLibraryPage() {
   return (
     <div className="container mx-auto py-8 space-y-6">
       <Filters filters={filters} onChange={setFilters} />
-      
+
       <div className="flex justify-end">
         <ViewToggle value={view} onChange={setView} />
       </div>

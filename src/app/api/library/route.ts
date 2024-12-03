@@ -46,15 +46,11 @@ export async function GET(request: NextRequest) {
     // Apply date range filter using the single date field
     if (dateFrom) {
       const fromDate = new Date(dateFrom)
-      filteredAds = filteredAds.filter(
-        (ad) => new Date(ad.date) >= fromDate
-      )
+      filteredAds = filteredAds.filter((ad) => new Date(ad.date) >= fromDate)
     }
     if (dateTo) {
       const toDate = new Date(dateTo)
-      filteredAds = filteredAds.filter(
-        (ad) => new Date(ad.date) <= toDate
-      )
+      filteredAds = filteredAds.filter((ad) => new Date(ad.date) <= toDate)
     }
 
     // Apply newsletter count filter using the newsletters array length
@@ -86,7 +82,10 @@ export async function GET(request: NextRequest) {
           if (Array.isArray(aValue)) {
             return (aValue.length - (bValue as Newsletter[]).length) * modifier
           }
-          return (aValue as Company).name.localeCompare((bValue as Company).name) * modifier
+          return (
+            (aValue as Company).name.localeCompare((bValue as Company).name) *
+            modifier
+          )
         default:
           return 0
       }

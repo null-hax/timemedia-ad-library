@@ -13,7 +13,7 @@ import {
   Tooltip,
   Legend,
   type ChartData,
-  type ChartOptions
+  type ChartOptions,
 } from 'chart.js'
 
 // Register ChartJS components
@@ -39,15 +39,15 @@ export function AdTrendChart({ data, days = 30 }: AdTrendChartProps) {
   const dateRange = eachDayOfInterval({ start: startDate, end: endDate })
 
   // Process data
-  const dailyCounts = dateRange.map(date => {
-    const dayAds = data.filter(ad => 
-      startOfDay(new Date(ad.date)).getTime() === date.getTime()
+  const dailyCounts = dateRange.map((date) => {
+    const dayAds = data.filter(
+      (ad) => startOfDay(new Date(ad.date)).getTime() === date.getTime()
     )
     return dayAds.length
   })
 
   const chartData: ChartData<'line'> = {
-    labels: dateRange.map(date => format(date, 'MMM d')),
+    labels: dateRange.map((date) => format(date, 'MMM d')),
     datasets: [
       {
         label: 'Number of Ads',
@@ -117,4 +117,4 @@ export function AdTrendChart({ data, days = 30 }: AdTrendChartProps) {
       <Line data={chartData} options={options} />
     </div>
   )
-} 
+}

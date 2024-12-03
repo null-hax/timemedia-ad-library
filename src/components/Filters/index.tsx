@@ -8,7 +8,13 @@ import { Badge } from '@/components/ui/badge'
 import { X } from 'lucide-react'
 import type { FilterState } from '@/types/ads'
 import { companies, newsletters } from '@/lib/mock/generateMockData'
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from '@/components/ui/select'
 import { MultiSelect } from '@/components/ui/multi-select'
 
 interface FiltersProps {
@@ -18,7 +24,7 @@ interface FiltersProps {
 
 // Get unique tags from all companies
 const allTags = Array.from(
-  new Set(companies.flatMap(company => company.tags))
+  new Set(companies.flatMap((company) => company.tags))
 ).sort()
 
 export function Filters({ filters, onChange }: FiltersProps) {
@@ -44,9 +50,9 @@ export function Filters({ filters, onChange }: FiltersProps) {
   const handleTagToggle = (tag: string) => {
     const currentTags = filters.tags || []
     const newTags = currentTags.includes(tag)
-      ? currentTags.filter(t => t !== tag)
+      ? currentTags.filter((t) => t !== tag)
       : [...currentTags, tag]
-    
+
     onChange({ tags: newTags })
   }
 
@@ -90,7 +96,7 @@ export function Filters({ filters, onChange }: FiltersProps) {
             }}
             options={newsletters
               .sort((a, b) => a.traffic_rank - b.traffic_rank)
-              .map(newsletter => ({
+              .map((newsletter) => ({
                 value: newsletter.id,
                 label: newsletter.name,
               }))}
@@ -102,10 +108,10 @@ export function Filters({ filters, onChange }: FiltersProps) {
       <div>
         <label className="text-sm font-medium mb-2 block">Tags</label>
         <div className="flex flex-wrap gap-2">
-          {allTags.map(tag => (
+          {allTags.map((tag) => (
             <Badge
               key={tag}
-              variant={filters.tags?.includes(tag) ? "default" : "secondary"}
+              variant={filters.tags?.includes(tag) ? 'default' : 'secondary'}
               className="cursor-pointer"
               onClick={() => handleTagToggle(tag)}
             >

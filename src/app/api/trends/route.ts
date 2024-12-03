@@ -14,45 +14,55 @@ export async function GET(request: Request) {
   const dateRange = eachDayOfInterval({ start: startDate, end: endDate })
 
   const ads = generateMockAds(1000) // Larger pool for meaningful trends
-    .filter(ad => {
+    .filter((ad) => {
       if (companyId && ad.companyId !== companyId) return false
-      if (newsletterId && !ad.newsletters.some(n => n.id === newsletterId)) return false
+      if (newsletterId && !ad.newsletters.some((n) => n.id === newsletterId))
+        return false
       if (tag && !ad.company.tags.includes(tag)) return false
       return true
     })
 
-  const trends: AdTrend[] = dateRange.map(date => {
-    const dayAds = ads.filter(ad => 
-      startOfDay(new Date(ad.date)).getTime() === date.getTime()
+  const trends: AdTrend[] = dateRange.map((date) => {
+    const dayAds = ads.filter(
+      (ad) => startOfDay(new Date(ad.date)).getTime() === date.getTime()
     )
 
     return {
       date: date.toISOString(),
       count: dayAds.length,
       ...(newsletterId && {
-        by_newsletter: dayAds.reduce((acc, ad) => {
-          ad.newsletters.forEach(n => {
-            acc[n.name] = (acc[n.name] || 0) + 1
-          })
-          return acc
-        }, {} as Record<string, number>)
+        by_newsletter: dayAds.reduce(
+          (acc, ad) => {
+            ad.newsletters.forEach((n) => {
+              acc[n.name] = (acc[n.name] || 0) + 1
+            })
+            return acc
+          },
+          {} as Record<string, number>
+        ),
       }),
       ...(companyId && {
-        by_company: dayAds.reduce((acc, ad) => {
-          acc[ad.companyName] = (acc[ad.companyName] || 0) + 1
-          return acc
-        }, {} as Record<string, number>)
+        by_company: dayAds.reduce(
+          (acc, ad) => {
+            acc[ad.companyName] = (acc[ad.companyName] || 0) + 1
+            return acc
+          },
+          {} as Record<string, number>
+        ),
       }),
       ...(tag && {
-        by_tag: dayAds.reduce((acc, ad) => {
-          ad.company.tags.forEach(t => {
-            acc[t] = (acc[t] || 0) + 1
-          })
-          return acc
-        }, {} as Record<string, number>)
-      })
+        by_tag: dayAds.reduce(
+          (acc, ad) => {
+            ad.company.tags.forEach((t) => {
+              acc[t] = (acc[t] || 0) + 1
+            })
+            return acc
+          },
+          {} as Record<string, number>
+        ),
+      }),
     }
   })
 
   return Response.json(trends)
-} 
+}
