@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { notFound } from 'next/navigation'
 import { useParams } from 'next/navigation'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 
 export default function CompanyPage() {
   const params = useParams()
@@ -30,7 +31,7 @@ export default function CompanyPage() {
       <header className="space-y-4">
         <div className="flex items-center gap-4">
           {company.image && (
-            <img
+            <Image
               src={company.image}
               alt={company.name}
               className="w-16 h-16 rounded-lg"
