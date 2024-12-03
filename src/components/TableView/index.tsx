@@ -17,9 +17,10 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { formatDate } from '@/lib/utils'
+import Link from 'next/link'
 import type { Ad, FilterState, SortState, PaginationState } from '@/types/ads'
-import React from 'react'
 
 interface TableViewProps {
   filters: FilterState
@@ -27,6 +28,7 @@ interface TableViewProps {
   onSort: (sort: SortState) => void
   pagination: PaginationState
   onPaginationChange: (pagination: Partial<PaginationState>) => void
+  onTagClick?: (tag: string) => void
 }
 
 export function TableView({
@@ -35,6 +37,7 @@ export function TableView({
   onSort,
   pagination,
   onPaginationChange,
+  onTagClick,
 }: TableViewProps) {
   const { data, loading, error } = useAds({ filters, sort, pagination })
 
@@ -70,7 +73,26 @@ export function TableView({
       header: 'Company',
       sortable: true,
       render: (row: Ad) => (
-        <span className="font-medium">{row.companyName}</span>
+        <div className="space-y-1">
+          <Link 
+            href={`/company/${row.companyId}`}
+            className="font-medium hover:text-blue-600"
+          >
+            {row.companyName}
+          </Link>
+          <div className="flex flex-wrap gap-1">
+            {row.company.tags.map(tag => (
+              <Badge
+                key={tag}
+                variant="secondary"
+                className="cursor-pointer hover:bg-secondary/80"
+                onClick={() => onTagClick?.(tag)}
+              >
+                {tag}
+              </Badge>
+            ))}
+          </div>
+        </div>
       ),
     },
     {
@@ -84,22 +106,39 @@ export function TableView({
       ),
     },
     {
-      id: 'firstSeen' as const,
-      header: 'First Seen',
+      id: 'date' as const,
+      header: 'Date Seen',
       sortable: true,
-      render: (row: Ad) => formatDate(row.firstSeen),
+      render: (row: Ad) => formatDate(row.date),
     },
     {
-      id: 'lastSeen' as const,
-      header: 'Last Seen',
-      sortable: true,
-      render: (row: Ad) => formatDate(row.lastSeen),
-    },
-    {
-      id: 'newsletterCount' as const,
+      id: 'newsletters' as const,
       header: 'Newsletters',
       sortable: true,
-      render: (row: Ad) => row.newsletterCount.toLocaleString(),
+      render: (row: Ad) => (
+        <div className="space-y-1">
+          <span className="font-medium">{row.newsletters.length}</span>
+          <div className="text-sm text-muted-foreground">
+            {row.newsletters
+              .sort((a, b) => a.traffic_rank - b.traffic_rank)
+              .slice(0, 2)
+              .map(n => (
+                <Link
+                  key={n.id}
+                  href={`/newsletter/${n.id}`}
+                  className="block hover:text-blue-600"
+                >
+                  {n.name}
+                </Link>
+              ))}
+            {row.newsletters.length > 2 && (
+              <span className="text-xs text-muted-foreground">
+                +{row.newsletters.length - 2} more
+              </span>
+            )}
+          </div>
+        </div>
+      ),
     },
   ]
 

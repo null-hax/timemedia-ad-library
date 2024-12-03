@@ -14,11 +14,12 @@ const DEFAULT_FILTER_STATE: FilterState = {
     min: null,
     max: null,
   },
+  tags: [],
 }
 
 const DEFAULT_SORT_STATE: SortState = {
-  field: 'companyName',
-  direction: 'asc',
+  field: 'date',
+  direction: 'desc',
 }
 
 const DEFAULT_PAGINATION_STATE: PaginationState = {
@@ -38,8 +39,8 @@ export function useAdsState() {
   const [view, setView] = useUrlState('view', 'table' as 'table' | 'card')
 
   const handleFilterChange = (newFilters: Partial<FilterState>) => {
-    setFilters({ ...filters, ...newFilters })
-    setPagination({ ...pagination, page: 1 }) // Reset to first page
+    setFilters(prev => ({ ...prev, ...newFilters }))
+    setPagination(prev => ({ ...prev, page: 1 })) // Reset to first page
     trackEvent({
       name: 'FILTER_CHANGE',
       properties: { filters: newFilters },
@@ -55,7 +56,7 @@ export function useAdsState() {
   }
 
   const handlePaginationChange = (newPagination: Partial<PaginationState>) => {
-    setPagination({ ...pagination, ...newPagination })
+    setPagination(prev => ({ ...prev, ...newPagination }))
     trackEvent({
       name: 'PAGINATION_CHANGE',
       properties: { pagination: newPagination },

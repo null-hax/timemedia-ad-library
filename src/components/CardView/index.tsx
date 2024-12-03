@@ -1,31 +1,35 @@
 'use client'
 
 import { useAds } from '@/hooks/useAds'
+import { Ad, FilterState, PaginationState, SortState } from '@/types/ads'
 import { AdCard } from './Card'
 import { Button } from '@/components/ui/button'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import type { FilterState, SortState, PaginationState } from '@/types/ads'
+import { useMemo } from 'react'
 
 interface CardViewProps {
   filters: FilterState
-  sort: SortState
   pagination: PaginationState
   onPaginationChange: (pagination: Partial<PaginationState>) => void
+  onTagClick?: (tag: string) => void
 }
 
 export function CardView({
   filters,
-  sort,
   pagination,
   onPaginationChange,
+  onTagClick,
 }: CardViewProps) {
-  const { data, loading, error } = useAds({ filters, sort, pagination })
+  // Memoize the sort configuration to prevent unnecessary re-renders
+  const sort = useMemo<SortState>(
+    () => ({ field: 'date', direction: 'desc' }),
+    []
+  )
+
+  const { data, loading, error } = useAds({
+    filters,
+    sort,
+    pagination,
+  })
 
   if (error) {
     return (
@@ -37,11 +41,11 @@ export function CardView({
 
   if (loading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: pagination.pageSize }).map((_, i) => (
           <div
             key={i}
-            className="h-[200px] bg-muted animate-pulse rounded-lg"
+            className="h-[300px] bg-muted animate-pulse rounded-lg"
           />
         ))}
       </div>
@@ -58,34 +62,15 @@ export function CardView({
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {data.data.map((ad) => (
-          <AdCard key={ad.id} ad={ad} />
+          <AdCard key={ad.id} ad={ad} onTagClick={onTagClick} />
         ))}
       </div>
 
-      <div className="flex items-center justify-between px-4 py-2 border-t">
-        <div className="flex items-center gap-2">
-          <Select
-            value={pagination.pageSize.toString()}
-            onValueChange={(value) =>
-              onPaginationChange({ pageSize: Number(value), page: 1 })
-            }
-          >
-            <SelectTrigger className="w-[100px]">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {[10, 20, 50, 100].map((size) => (
-                <SelectItem key={size} value={size.toString()}>
-                  {size} / page
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <span className="text-sm text-muted-foreground">
-            Total: {data.total} ads
-          </span>
+      <div className="flex items-center justify-between">
+        <div className="text-sm text-muted-foreground">
+          Total: {data.total} ads
         </div>
         <div className="flex items-center gap-2">
           <Button

@@ -1,14 +1,13 @@
 'use client'
 
-import { Suspense } from 'react'
-import { useAdsState } from '@/hooks/useAdsState'
+import { useState } from 'react'
 import { TableView } from '@/components/TableView'
 import { CardView } from '@/components/CardView'
 import { Filters } from '@/components/Filters'
-import { Button } from '@/components/ui/button'
-import { LayoutGrid, Table as TableIcon } from 'lucide-react'
+import { ViewToggle } from '@/components/ViewToggle'
+import { useAdsState } from '@/hooks/useAdsState'
 
-function HomeContent() {
+export default function AdsLibraryPage() {
   const {
     filters,
     setFilters,
@@ -20,62 +19,41 @@ function HomeContent() {
     setView,
   } = useAdsState()
 
+  const handleTagClick = (tag: string) => {
+    const currentTags = filters.tags || []
+    if (!currentTags.includes(tag)) {
+      setFilters({
+        ...filters,
+        tags: [...currentTags, tag],
+      })
+    }
+  }
+
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Newsletter Ad Library</h1>
-        <div className="flex gap-2">
-          <Button
-            variant={view === 'table' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setView('table')}
-          >
-            <TableIcon className="h-4 w-4 mr-2" />
-            Table
-          </Button>
-          <Button
-            variant={view === 'card' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setView('card')}
-          >
-            <LayoutGrid className="h-4 w-4 mr-2" />
-            Cards
-          </Button>
-        </div>
+    <div className="container mx-auto py-8 space-y-6">
+      <Filters filters={filters} onChange={setFilters} />
+      
+      <div className="flex justify-end">
+        <ViewToggle value={view} onChange={setView} />
       </div>
 
-      <div className="mb-8">
-        <Filters filters={filters} onChange={setFilters} />
-      </div>
-
-      <div className="mt-8">
-        {view === 'table' ? (
-          <TableView
-            filters={filters}
-            sort={sort}
-            onSort={setSort}
-            pagination={pagination}
-            onPaginationChange={setPagination}
-          />
-        ) : (
-          <CardView
-            filters={filters}
-            sort={sort}
-            pagination={pagination}
-            onPaginationChange={setPagination}
-          />
-        )}
-      </div>
+      {view === 'table' ? (
+        <TableView
+          filters={filters}
+          sort={sort}
+          onSort={setSort}
+          pagination={pagination}
+          onPaginationChange={setPagination}
+          onTagClick={handleTagClick}
+        />
+      ) : (
+        <CardView
+          filters={filters}
+          pagination={pagination}
+          onPaginationChange={setPagination}
+          onTagClick={handleTagClick}
+        />
+      )}
     </div>
-  )
-}
-
-export default function HomePage() {
-  return (
-    <Suspense
-      fallback={<div className="container mx-auto px-4 py-8">Loading...</div>}
-    >
-      <HomeContent />
-    </Suspense>
   )
 }

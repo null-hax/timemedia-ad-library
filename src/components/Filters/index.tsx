@@ -4,13 +4,20 @@ import { Input } from '@/components/ui/input'
 import { DateRangePicker } from './DateRangePicker'
 import { RangeFilter } from './RangeFilter'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { X } from 'lucide-react'
 import type { FilterState } from '@/types/ads'
+import { companies } from '@/lib/mock/generateMockData'
 
 interface FiltersProps {
   filters: FilterState
   onChange: (filters: Partial<FilterState>) => void
 }
+
+// Get unique tags from all companies
+const allTags = Array.from(
+  new Set(companies.flatMap(company => company.tags))
+).sort()
 
 export function Filters({ filters, onChange }: FiltersProps) {
   const hasActiveFilters =
@@ -18,14 +25,25 @@ export function Filters({ filters, onChange }: FiltersProps) {
     filters.dateRange.from ||
     filters.dateRange.to ||
     filters.newsletterCount.min ||
-    filters.newsletterCount.max
+    filters.newsletterCount.max ||
+    (filters.tags && filters.tags.length > 0)
 
   const handleClearFilters = () => {
     onChange({
       search: '',
       dateRange: { from: null, to: null },
       newsletterCount: { min: null, max: null },
+      tags: [],
     })
+  }
+
+  const handleTagToggle = (tag: string) => {
+    const currentTags = filters.tags || []
+    const newTags = currentTags.includes(tag)
+      ? currentTags.filter(t => t !== tag)
+      : [...currentTags, tag]
+    
+    onChange({ tags: newTags })
   }
 
   return (
@@ -59,16 +77,29 @@ export function Filters({ filters, onChange }: FiltersProps) {
           />
         </div>
 
-
-
         <div>
           <label className="text-sm font-medium mb-2 block">Newsletters</label>
           <RangeFilter
             min={filters.newsletterCount.min}
             max={filters.newsletterCount.max}
             onChange={(min, max) => onChange({ newsletterCount: { min, max } })}
-            placeholder="Enter newsletter count..."
           />
+        </div>
+      </div>
+
+      <div>
+        <label className="text-sm font-medium mb-2 block">Tags</label>
+        <div className="flex flex-wrap gap-2">
+          {allTags.map(tag => (
+            <Badge
+              key={tag}
+              variant={filters.tags?.includes(tag) ? "default" : "secondary"}
+              className="cursor-pointer"
+              onClick={() => handleTagToggle(tag)}
+            >
+              {tag}
+            </Badge>
+          ))}
         </div>
       </div>
     </div>

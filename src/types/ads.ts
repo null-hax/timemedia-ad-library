@@ -1,10 +1,12 @@
 export interface Ad {
   id: string
   companyName: string
+  companyId: string
   adCopy: string
-  firstSeen: string
-  lastSeen: string
-  newsletterCount: number
+  date: string
+  newsletters: Newsletter[]
+  company: Company
+  image?: string
 }
 
 export interface FilterState {
@@ -17,6 +19,7 @@ export interface FilterState {
     min: number | null
     max: number | null
   }
+  tags?: string[]
 }
 
 export interface SortState {
@@ -34,4 +37,27 @@ export interface ApiResponse<T> {
   total: number
   page: number
   pageSize: number
+}
+
+export interface Newsletter {
+  id: string
+  name: string
+  description: string
+  traffic_rank: number
+}
+
+export interface Company {
+  id: string
+  name: string
+  tags: string[]
+  description?: string
+  image?: string
+}
+
+export interface AdTrend {
+  date: string
+  count: number
+  by_newsletter?: Record<string, number>
+  by_company?: Record<string, number>
+  by_tag?: Record<string, number>
 }

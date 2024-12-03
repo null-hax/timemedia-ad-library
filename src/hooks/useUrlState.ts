@@ -1,39 +1,45 @@
 'use client'
 
-import { useCallback, useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useSearchParams, useRouter, usePathname } from 'next/navigation'
 
-export function useUrlState<T>(key: string, defaultValue: T) {
+export function useUrlState<T>(key: string, initialState: T) {
+  const searchParams = useSearchParams()
   const router = useRouter()
   const pathname = usePathname()
-  const searchParams = useSearchParams()
+  
+  // Initialize state from URL or default
   const [state, setState] = useState<T>(() => {
-    const param = searchParams.get(key)
-    if (!param) return defaultValue
-    try {
-      return JSON.parse(param) as T
-    } catch {
-      return defaultValue
+    const paramValue = searchParams.get(key)
+    if (paramValue) {
+      try {
+        return JSON.parse(paramValue) as T
+      } catch {
+        return initialState
+      }
     }
+    return initialState
   })
 
-  const setValue = useCallback(
-    (newValue: T) => {
-      setState(newValue)
-      const params = new URLSearchParams(searchParams.toString())
+  // Memoize the URL update function
+  const updateUrl = useCallback((newState: T) => {
+    const params = new URLSearchParams(searchParams.toString())
+    params.set(key, JSON.stringify(newState))
+    router.replace(`${pathname}?${params.toString()}`)
+  }, [key, pathname, router, searchParams])
 
-      if (newValue === defaultValue) {
-        params.delete(key)
-      } else {
-        params.set(key, JSON.stringify(newValue))
-      }
+  // Update URL when state changes
+  useEffect(() => {
+    updateUrl(state)
+  }, [state, updateUrl])
 
-      router.replace(
-        (pathname + (params.toString() ? `?${params.toString()}` : '')) as any
+  return [
+    state,
+    (newState: T | ((prev: T) => T)) => {
+      setState(typeof newState === 'function' 
+        ? (newState as ((prev: T) => T))
+        : newState
       )
     },
-    [key, defaultValue, pathname, router, searchParams]
-  )
-
-  return [state, setValue] as const
+  ] as const
 }
