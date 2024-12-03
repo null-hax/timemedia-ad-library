@@ -36,7 +36,7 @@ export function useAdsState() {
     'pagination',
     DEFAULT_PAGINATION_STATE
   )
-  const [view, setView] = useUrlState('view', 'table' as 'table' | 'card')
+  const [view, setView] = useUrlState('view', 'card' as 'card' | 'table')
 
   const handleFilterChange = (newFilters: Partial<FilterState>) => {
     setFilters((prev) => ({ ...prev, ...newFilters }))
@@ -63,7 +63,7 @@ export function useAdsState() {
     })
   }
 
-  const handleViewChange = (newView: 'table' | 'card') => {
+  const handleViewChange = (newView: 'card' | 'table') => {
     setView(newView)
     trackEvent({
       name: 'VIEW_TOGGLE',
