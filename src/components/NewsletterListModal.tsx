@@ -1,3 +1,5 @@
+'use client'
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Newsletter } from "@/types/ads"
 import Link from "next/link"

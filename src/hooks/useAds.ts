@@ -54,9 +54,10 @@ export function useAds({ filters, sort, pagination }: UseAdsProps) {
       }
 
       // Add newsletter params
-      if (filters.newsletter) {
-        console.log('Adding newsletter param:', filters.newsletter)
-        params.append('newsletter', filters.newsletter)
+      if (filters.newsletters && filters.newsletters.length > 0) {
+        filters.newsletters.forEach(id => {
+          params.append('newsletters', id)
+        })
       }
 
       // Add sort params

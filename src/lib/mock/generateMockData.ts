@@ -121,19 +121,30 @@ const products = [
   'Blue',
 ]
 
+// Add a seed function for deterministic random numbers
+function seededRandom(seed: number) {
+  return function() {
+    seed = (seed * 16807) % 2147483647;
+    return (seed - 1) / 2147483646;
+  };
+}
+
+const getRandom = seededRandom(123); // Fixed seed
+
 function randomDate(start: Date, daysRange: number): string {
-  const end = new Date(start)
-  end.setDate(end.getDate() + daysRange)
+  const end = new Date(start);
+  end.setDate(end.getDate() + daysRange);
   
   return new Date(
-    start.getTime() + Math.random() * (end.getTime() - start.getTime())
-  ).toISOString()
+    start.getTime() + getRandom() * (end.getTime() - start.getTime())
+  ).toISOString();
 }
 
 function getRandomNewsletters(min: number = 1, max: number = 5): Newsletter[] {
-  const count = Math.floor(Math.random() * (max - min + 1)) + min
-  const shuffled = [...newsletters].sort(() => 0.5 - Math.random())
-  return shuffled.slice(0, count)
+  const count = Math.floor(getRandom() * (max - min + 1)) + min;
+  return [...newsletters]
+    .sort(() => getRandom() - 0.5)
+    .slice(0, count);
 }
 
 function generateMockAd(): Ad {

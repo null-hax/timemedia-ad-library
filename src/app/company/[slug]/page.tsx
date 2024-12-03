@@ -5,18 +5,18 @@ import { AdCard } from '@/components/CardView/Card'
 import { AdTrendChart } from '@/components/Charts/AdTrendChart'
 import { Badge } from '@/components/ui/badge'
 import { notFound } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 
-interface CompanyPageProps {
-  params: { slug: string }
-}
-
-export default function CompanyPage({ params }: CompanyPageProps) {
-  const router = useRouter()
-  const company = companies.find(c => c.slug === params.slug)
+export default function CompanyPage() {
+  const params = useParams();
+  const slug = params.slug as string;
+  const router = useRouter();
+  
+  const company = companies.find(c => c.slug === slug);
   
   if (!company) {
-    notFound()
+    notFound();
   }
 
   const ads = generateMockAds(100).filter(ad => ad.companyId === company.id)

@@ -47,15 +47,15 @@ export async function GET(request: Request) {
     )
   }
 
-  // Add newsletter filter
-  if (searchParams.get('newsletter')) {
-    const newsletterId = searchParams.get('newsletter')
-    console.log('Filtering by newsletter:', newsletterId)
-    console.log('Sample ad newsletters:', ads[0].newsletters.map(n => ({ id: n.id, name: n.name })))
+  // Update the newsletter filter
+  const newsletters = searchParams.getAll('newsletters')
+  if (newsletters.length > 0) {
     ads = ads.filter(ad => 
-      ad.newsletters.some(n => n.id === newsletterId)
+      // Ad must appear in ANY of the selected newsletters
+      newsletters.some(newsletterId => 
+        ad.newsletters.some(n => n.id === newsletterId)
+      )
     )
-    console.log('Filtered ads count:', ads.length)
   }
 
   // Sorting

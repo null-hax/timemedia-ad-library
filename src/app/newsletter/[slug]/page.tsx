@@ -4,23 +4,23 @@ import { newsletters, generateMockAds } from '@/lib/mock/generateMockData'
 import { AdCard } from '@/components/CardView/Card'
 import { AdTrendChart } from '@/components/Charts/AdTrendChart'
 import { notFound } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 
-interface NewsletterPageProps {
-  params: { slug: string }
-}
-
-export default function NewsletterPage({ params }: NewsletterPageProps) {
-  const router = useRouter()
-  const newsletter = newsletters.find(n => n.slug === params.slug)
+export default function NewsletterPage() {
+  const params = useParams();
+  const slug = params.slug as string;
+  const router = useRouter();
+  
+  const newsletter = newsletters.find(n => n.slug === slug);
   
   if (!newsletter) {
-    notFound()
+    notFound();
   }
 
   const ads = generateMockAds(100).filter(ad => 
     ad.newsletters.some(n => n.id === newsletter.id)
-  )
+  );
 
   const handleTagClick = (tag: string) => {
     router.push(`/?tags=${tag}`)

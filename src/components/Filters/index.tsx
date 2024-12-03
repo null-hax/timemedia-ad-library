@@ -9,6 +9,7 @@ import { X } from 'lucide-react'
 import type { FilterState } from '@/types/ads'
 import { companies, newsletters } from '@/lib/mock/generateMockData'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
+import { MultiSelect } from '@/components/ui/multi-select'
 
 interface FiltersProps {
   filters: FilterState
@@ -28,7 +29,7 @@ export function Filters({ filters, onChange }: FiltersProps) {
     filters.newsletterCount.min ||
     filters.newsletterCount.max ||
     (filters.tags && filters.tags.length > 0) ||
-    filters.newsletter !== undefined
+    filters.newsletters !== undefined
 
   const handleClearFilters = () => {
     onChange({
@@ -36,7 +37,7 @@ export function Filters({ filters, onChange }: FiltersProps) {
       dateRange: { from: null, to: null },
       newsletterCount: { min: null, max: null },
       tags: [],
-      newsletter: undefined,
+      newsletters: undefined,
     })
   }
 
@@ -74,7 +75,7 @@ export function Filters({ filters, onChange }: FiltersProps) {
         <div>
           <label className="text-sm font-medium mb-2 block">Search</label>
           <Input
-            placeholder="Search companies or ad copy..."
+            placeholder="Search companies, ad copy or newsletters..."
             value={filters.search}
             onChange={(e) => onChange({ search: e.target.value })}
           />
@@ -82,35 +83,19 @@ export function Filters({ filters, onChange }: FiltersProps) {
 
         <div>
           <label className="text-sm font-medium mb-2 block">Newsletters</label>
-          <RangeFilter
-            min={filters.newsletterCount.min}
-            max={filters.newsletterCount.max}
-            onChange={(min, max) => onChange({ newsletterCount: { min, max } })}
-          />
-        </div>
-
-        <div>
-          <label className="text-sm font-medium mb-2 block">Newsletter</label>
-          <Select
-            value={filters.newsletter ?? "all"}
+          <MultiSelect
+            value={filters.newsletters || []}
             onValueChange={(value) => {
-              onChange({ newsletter: value === "all" ? undefined : value })
+              onChange({ newsletters: value.length > 0 ? value : undefined })
             }}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select a newsletter" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Newsletters</SelectItem>
-              {newsletters
-                .sort((a, b) => a.traffic_rank - b.traffic_rank)
-                .map(newsletter => (
-                  <SelectItem key={newsletter.id} value={newsletter.id}>
-                    {newsletter.name}
-                  </SelectItem>
-                ))}
-            </SelectContent>
-          </Select>
+            options={newsletters
+              .sort((a, b) => a.traffic_rank - b.traffic_rank)
+              .map(newsletter => ({
+                value: newsletter.id,
+                label: newsletter.name,
+              }))}
+            placeholder="Select newsletters..."
+          />
         </div>
       </div>
 
