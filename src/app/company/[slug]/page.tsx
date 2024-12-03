@@ -34,7 +34,9 @@ export default function CompanyPage() {
             <Image
               src={company.image}
               alt={company.name}
-              className="w-16 h-16 rounded-lg"
+              width={64}
+              height={64}
+              className="rounded-lg"
             />
           )}
           <div>
