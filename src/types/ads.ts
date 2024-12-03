@@ -14,15 +14,16 @@ export type ViewType = 'table' | 'card'
 export interface FilterState {
   search: string
   dateRange: {
-    from: string | null
-    to: string | null
-  } | null
-  newsletterCount?: {
+    from: Date | null
+    to: Date | null
+  }
+  newsletterCount: {
     min: number | null
     max: number | null
   }
   tags: string[]
-  newsletters?: string[]
+  companyId: string | null
+  newsletterId: string | null
 }
 
 export interface SortState {

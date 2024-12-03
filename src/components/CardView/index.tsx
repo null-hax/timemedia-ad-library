@@ -3,7 +3,15 @@
 import { Ad, FilterState, PaginationState, SortState } from '@/types/ads'
 import { AdCard } from './Card'
 import { Button } from '@/components/ui/button'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { useMemo } from 'react'
+import { Pagination } from '@/components/Pagination'
 
 interface CardViewProps {
   filters: FilterState
@@ -24,6 +32,8 @@ export function CardView({
   loading,
   error,
 }: CardViewProps) {
+  const pageSizeOptions = [12, 24, 36, 48]
+
   if (error) {
     return (
       <div className="text-center py-8 text-red-500">
@@ -32,20 +42,7 @@ export function CardView({
     )
   }
 
-  if (loading) {
-    return (
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {Array.from({ length: pagination.pageSize }).map((_, i) => (
-          <div
-            key={i}
-            className="h-[300px] bg-muted animate-pulse rounded-lg"
-          />
-        ))}
-      </div>
-    )
-  }
-
-  if (!data?.data.length) {
+  if (!data?.data.length && !loading) {
     return (
       <div className="text-center py-8 text-muted-foreground">
         No ads found. Try adjusting your filters.
@@ -55,41 +52,32 @@ export function CardView({
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {data.data.map((ad) => (
-          <AdCard key={ad.id} ad={ad} onTagClick={onTagClick} />
-        ))}
-      </div>
-
-      <div className="flex items-center justify-between">
-        <div className="text-sm text-muted-foreground">
-          Total: {data.total} ads
+      {loading ? (
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: pagination.pageSize }).map((_, i) => (
+            <div
+              key={i}
+              className="h-[300px] bg-muted animate-pulse rounded-lg"
+            />
+          ))}
         </div>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={pagination.page === 1}
-            onClick={() => onPaginationChange({ page: pagination.page - 1 })}
-          >
-            Previous
-          </Button>
-          <span className="text-sm">
-            Page {pagination.page} of{' '}
-            {Math.ceil(data.total / pagination.pageSize)}
-          </span>
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={
-              pagination.page >= Math.ceil(data.total / pagination.pageSize)
-            }
-            onClick={() => onPaginationChange({ page: pagination.page + 1 })}
-          >
-            Next
-          </Button>
-        </div>
-      </div>
+      ) : (
+        <>
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {data?.data.map((ad) => (
+              <AdCard key={ad.id} ad={ad} onTagClick={onTagClick} />
+            ))}
+          </div>
+          {data && (
+            <Pagination
+              pagination={pagination}
+              onPaginationChange={onPaginationChange}
+              total={data.total}
+              className="border-t"
+            />
+          )}
+        </>
+      )}
     </div>
   )
 }

@@ -8,6 +8,7 @@ import { Card } from '@/components/ui/card'
 import { notFound } from 'next/navigation'
 import { useParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
+import { AdsGrid } from '@/components/AdsGrid'
 
 export default function CompanyPage() {
   const params = useParams()
@@ -19,8 +20,6 @@ export default function CompanyPage() {
   if (!company) {
     notFound()
   }
-
-  const ads = generateMockAds(100).filter((ad) => ad.companyId === company.id)
 
   const handleTagClick = (tag: string) => {
     router.push(`/?tags=${tag}`)
@@ -62,7 +61,7 @@ export default function CompanyPage() {
         <Card className="p-4 lg:col-span-2">
           <h2 className="text-xl font-semibold mb-2">Ad Frequency</h2>
           <div className="h-48">
-            <AdTrendChart data={ads} />
+            <AdTrendChart data={generateMockAds(100)} />
           </div>
         </Card>
 
@@ -119,11 +118,11 @@ export default function CompanyPage() {
 
         <div className="lg:col-span-3">
           <h2 className="text-2xl font-semibold mb-6">Recent Ads</h2>
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {ads.map((ad) => (
-              <AdCard key={ad.id} ad={ad} onTagClick={handleTagClick} />
-            ))}
-          </div>
+          <AdsGrid 
+            initialFilters={{ companyId: company.id }}
+            showFilters={false}
+            showViewToggle={true}
+          />
         </div>
       </div>
     </div>

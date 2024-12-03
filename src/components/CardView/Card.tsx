@@ -2,10 +2,9 @@ import { formatDate } from '@/lib/utils'
 import type { Ad } from '@/types/ads'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import Link from 'next/link'
 import { NewsletterListModal } from '@/components/NewsletterListModal'
 import Image from 'next/image'
+import Link from 'next/link'
 
 interface AdCardProps {
   ad: Ad

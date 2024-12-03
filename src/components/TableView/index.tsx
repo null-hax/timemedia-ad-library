@@ -21,6 +21,7 @@ import { formatDate } from '@/lib/utils'
 import Link from 'next/link'
 import type { Ad, FilterState, SortState, PaginationState } from '@/types/ads'
 import { NewsletterListModal } from '@/components/NewsletterListModal'
+import { Pagination } from '@/components/Pagination'
 
 interface TableViewProps {
   filters: FilterState
@@ -238,51 +239,14 @@ export function TableView({
           ))}
         </TableBody>
       </Table>
-      <div className="flex items-center justify-between px-6 py-4 border-t bg-muted/50">
-        <div className="flex items-center gap-3">
-          <Select
-            value={pagination.pageSize.toString()}
-            onValueChange={(value) =>
-              onPaginationChange({ pageSize: Number(value), page: 1 })
-            }
-          >
-            <SelectTrigger className="w-[115px]">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {[10, 20, 50, 100].map((size) => (
-                <SelectItem key={size} value={size.toString()}>
-                  {size} per page
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <span className="text-sm text-muted-foreground">
-            Total: {data.total} ads
-          </span>
-        </div>
-        <div className="flex items-center gap-3">
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={pagination.page === 1}
-            onClick={() => onPaginationChange({ page: pagination.page - 1 })}
-          >
-            Previous
-          </Button>
-          <span className="text-sm text-muted-foreground">
-            Page {pagination.page} of {Math.ceil(data.total / pagination.pageSize)}
-          </span>
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={pagination.page >= Math.ceil(data.total / pagination.pageSize)}
-            onClick={() => onPaginationChange({ page: pagination.page + 1 })}
-          >
-            Next
-          </Button>
-        </div>
-      </div>
+      {data && (
+        <Pagination
+          pagination={pagination}
+          onPaginationChange={onPaginationChange}
+          total={data.total}
+          className="border-t bg-muted/50 px-4"
+        />
+      )}
     </div>
   )
 }
