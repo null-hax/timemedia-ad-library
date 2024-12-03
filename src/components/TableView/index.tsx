@@ -21,6 +21,7 @@ import { Badge } from '@/components/ui/badge'
 import { formatDate } from '@/lib/utils'
 import Link from 'next/link'
 import type { Ad, FilterState, SortState, PaginationState } from '@/types/ads'
+import { NewsletterListModal } from '@/components/NewsletterListModal'
 
 interface TableViewProps {
   filters: FilterState
@@ -115,30 +116,18 @@ export function TableView({
       id: 'newsletters' as const,
       header: 'Newsletters',
       sortable: true,
-      render: (row: Ad) => (
-        <div className="space-y-1">
-          <span className="font-medium">{row.newsletters.length}</span>
-          <div className="text-sm text-muted-foreground">
-            {row.newsletters
-              .sort((a, b) => a.traffic_rank - b.traffic_rank)
-              .slice(0, 2)
-              .map(n => (
-                <Link
-                  key={n.id}
-                  href={`/newsletter/${n.slug}`}
-                  className="block hover:text-blue-600"
-                >
-                  {n.name}
-                </Link>
-              ))}
-            {row.newsletters.length > 2 && (
-              <span className="text-xs text-muted-foreground">
-                +{row.newsletters.length - 2} more
-              </span>
-            )}
-          </div>
-        </div>
-      ),
+      render: (row: Ad) => {
+        const sortedNewsletters = [...row.newsletters]
+          .sort((a, b) => a.traffic_rank - b.traffic_rank)
+        
+        return (
+          <NewsletterListModal newsletters={sortedNewsletters}>
+            <button className="font-medium hover:text-blue-600">
+              {row.newsletters.length}
+            </button>
+          </NewsletterListModal>
+        )
+      },
     },
   ]
 

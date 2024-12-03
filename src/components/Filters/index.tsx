@@ -7,7 +7,8 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { X } from 'lucide-react'
 import type { FilterState } from '@/types/ads'
-import { companies } from '@/lib/mock/generateMockData'
+import { companies, newsletters } from '@/lib/mock/generateMockData'
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 
 interface FiltersProps {
   filters: FilterState
@@ -26,7 +27,8 @@ export function Filters({ filters, onChange }: FiltersProps) {
     filters.dateRange.to ||
     filters.newsletterCount.min ||
     filters.newsletterCount.max ||
-    (filters.tags && filters.tags.length > 0)
+    (filters.tags && filters.tags.length > 0) ||
+    filters.newsletter !== undefined
 
   const handleClearFilters = () => {
     onChange({
@@ -34,6 +36,7 @@ export function Filters({ filters, onChange }: FiltersProps) {
       dateRange: { from: null, to: null },
       newsletterCount: { min: null, max: null },
       tags: [],
+      newsletter: undefined,
     })
   }
 
@@ -84,6 +87,30 @@ export function Filters({ filters, onChange }: FiltersProps) {
             max={filters.newsletterCount.max}
             onChange={(min, max) => onChange({ newsletterCount: { min, max } })}
           />
+        </div>
+
+        <div>
+          <label className="text-sm font-medium mb-2 block">Newsletter</label>
+          <Select
+            value={filters.newsletter ?? "all"}
+            onValueChange={(value) => {
+              onChange({ newsletter: value === "all" ? undefined : value })
+            }}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select a newsletter" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Newsletters</SelectItem>
+              {newsletters
+                .sort((a, b) => a.traffic_rank - b.traffic_rank)
+                .map(newsletter => (
+                  <SelectItem key={newsletter.id} value={newsletter.id}>
+                    {newsletter.name}
+                  </SelectItem>
+                ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
 

@@ -4,17 +4,20 @@ import Link from "next/link"
 
 interface NewsletterListModalProps {
   newsletters: Newsletter[]
+  children?: React.ReactNode
 }
 
-export function NewsletterListModal({ newsletters }: NewsletterListModalProps) {
+export function NewsletterListModal({ newsletters, children }: NewsletterListModalProps) {
   const sortedNewsletters = [...newsletters].sort((a, b) => a.traffic_rank - b.traffic_rank)
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button className="text-sm text-blue-600 hover:text-blue-800">
-          +{newsletters.length - 3} more
-        </button>
+        {children || (
+          <button className="text-sm text-blue-600 hover:text-blue-800">
+            +{newsletters.length - 3} more
+          </button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

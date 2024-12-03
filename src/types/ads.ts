@@ -20,6 +20,7 @@ export interface FilterState {
     max: number | null
   }
   tags?: string[]
+  newsletter?: string
 }
 
 export interface SortState {

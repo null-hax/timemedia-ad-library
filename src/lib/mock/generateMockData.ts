@@ -1,5 +1,6 @@
 import { Ad, Newsletter, Company } from '@/types/ads'
 import { slugify } from '@/lib/utils'
+import { cache } from 'react'
 
 // Mock newsletters with traffic ranks
 const newsletters = [
@@ -13,7 +14,7 @@ const newsletters = [
   { id: 'n8', name: 'Web3 Daily', description: 'Crypto and web3 news', traffic_rank: 8 },
   { id: 'n9', name: 'Milk Road', description: 'Crypto market updates', traffic_rank: 9 },
   { id: 'n10', name: 'DeFi Weekly', description: 'Decentralized finance news', traffic_rank: 10 },
-].map(n => ({ ...n, id: Math.random().toString(36).substr(2, 9), slug: slugify(n.name) })) as Newsletter[]
+].map(n => ({ ...n, slug: slugify(n.name) })) as Newsletter[]
 
 // Companies with tags
 const companies: Company[] = [
@@ -155,9 +156,35 @@ function generateMockAd(): Ad {
   }
 }
 
-export function generateMockAds(count: number = 20): Ad[] {
-  return Array.from({ length: count }, generateMockAd)
+const CACHE_DURATION = 60 * 60 * 1000 // 1 hour
+
+interface CachedData {
+  ads: Ad[]
+  timestamp: number
 }
+
+let mockDataCache: CachedData | null = null
+
+export const generateMockAds = cache((count: number = 20): Ad[] => {
+  // Check if we have valid cached data
+  if (mockDataCache) {
+    const age = Date.now() - mockDataCache.timestamp
+    if (age < CACHE_DURATION) {
+      return mockDataCache.ads
+    }
+  }
+
+  // Generate new data
+  const ads = Array.from({ length: count }, generateMockAd)
+  
+  // Cache the new data
+  mockDataCache = {
+    ads,
+    timestamp: Date.now()
+  }
+  
+  return ads
+})
 
 // Export these for use in other parts of the application
 export { newsletters, companies }

@@ -53,6 +53,12 @@ export function useAds({ filters, sort, pagination }: UseAdsProps) {
         })
       }
 
+      // Add newsletter params
+      if (filters.newsletter) {
+        console.log('Adding newsletter param:', filters.newsletter)
+        params.append('newsletter', filters.newsletter)
+      }
+
       // Add sort params
       params.append('sort.field', sort.field)
       params.append('sort.direction', sort.direction)

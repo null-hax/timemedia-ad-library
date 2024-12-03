@@ -11,7 +11,8 @@ export async function GET(request: Request) {
     const search = searchParams.get('search')!.toLowerCase()
     ads = ads.filter(ad => 
       ad.companyName.toLowerCase().includes(search) ||
-      ad.adCopy.toLowerCase().includes(search)
+      ad.adCopy.toLowerCase().includes(search) ||
+      ad.newsletters.some(n => n.name.toLowerCase().includes(search))
     )
   }
 
@@ -44,6 +45,17 @@ export async function GET(request: Request) {
       // Check if any of the ad's company tags match any of the filter tags
       tags.some(filterTag => ad.company.tags.includes(filterTag))
     )
+  }
+
+  // Add newsletter filter
+  if (searchParams.get('newsletter')) {
+    const newsletterId = searchParams.get('newsletter')
+    console.log('Filtering by newsletter:', newsletterId)
+    console.log('Sample ad newsletters:', ads[0].newsletters.map(n => ({ id: n.id, name: n.name })))
+    ads = ads.filter(ad => 
+      ad.newsletters.some(n => n.id === newsletterId)
+    )
+    console.log('Filtered ads count:', ads.length)
   }
 
   // Sorting
