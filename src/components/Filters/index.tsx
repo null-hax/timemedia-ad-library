@@ -57,9 +57,10 @@ export function Filters({ filters, onChange }: FiltersProps) {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Filters</h2>
+    <div className="space-y-4 sticky top-0 bg-background z-10 py-6 shadow-sm">
+      <div className="container mx-auto">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold">Filters</h2>
         {hasActiveFilters && (
           <Button variant="ghost" size="sm" onClick={handleClearFilters}>
             <X className="h-4 w-4 mr-2" />
@@ -105,7 +106,7 @@ export function Filters({ filters, onChange }: FiltersProps) {
         </div>
       </div>
 
-      <div>
+      <div className="mt-4">
         <label className="text-sm font-medium mb-2 block">Tags</label>
         <div className="flex flex-wrap gap-2">
           {allTags.map((tag) => (
@@ -120,6 +121,8 @@ export function Filters({ filters, onChange }: FiltersProps) {
           ))}
         </div>
       </div>
+      </div>
+      
     </div>
   )
 }
