@@ -55,7 +55,6 @@ export function AdTrendChart({ data, days = 30 }: AdTrendChartProps) {
         borderColor: 'rgb(59, 130, 246)', // Blue
         backgroundColor: 'rgba(59, 130, 246, 0.1)',
         tension: 0.3,
-        fill: true,
         pointRadius: 4,
         pointHoverRadius: 6,
       },
