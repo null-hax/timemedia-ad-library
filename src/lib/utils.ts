@@ -27,3 +27,9 @@ export function slugify(text: string): string {
     .replace(/[\s_-]+/g, '-')
     .replace(/^-+|-+$/g, '')
 }
+
+export function sanitizeString(str: string): string {
+  return str
+    .replace(/['']/g, '\'')  // Replace smart quotes with straight quotes
+    .replace(/[""]/g, '"')   // Replace smart double quotes with straight quotes
+}

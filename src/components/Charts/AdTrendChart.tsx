@@ -112,7 +112,7 @@ export function AdTrendChart({ data, days = 30 }: AdTrendChartProps) {
   }
 
   return (
-    <div className="w-full h-[400px] bg-white rounded-lg p-4 border">
+    <div className="w-full h-full">
       <Line data={chartData} options={options} />
     </div>
   )
