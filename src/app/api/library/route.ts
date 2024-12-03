@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { generateMockAds } from '@/lib/mock/generateMockData'
-import type { Ad, ApiResponse } from '@/types/ads'
+import type { Ad, ApiResponse, Company, Newsletter } from '@/types/ads'
 
 // Generate mock data once when the API route is initialized
 const TOTAL_MOCK_ADS = 100
@@ -9,7 +9,7 @@ const mockAds = generateMockAds(TOTAL_MOCK_ADS)
 export async function GET(request: NextRequest) {
   try {
     // Simulate network latency
-    await new Promise((resolve) => setTimeout(resolve, 200))
+    await new Promise((resolve) => setTimeout(resolve, 0))
 
     // Get query parameters
     const searchParams = request.nextUrl.searchParams
@@ -43,40 +43,53 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Apply date range filter
+    // Apply date range filter using the single date field
     if (dateFrom) {
       const fromDate = new Date(dateFrom)
       filteredAds = filteredAds.filter(
-        (ad) => new Date(ad.lastSeen) >= fromDate
+        (ad) => new Date(ad.date) >= fromDate
       )
     }
     if (dateTo) {
       const toDate = new Date(dateTo)
-      filteredAds = filteredAds.filter((ad) => new Date(ad.firstSeen) <= toDate)
+      filteredAds = filteredAds.filter(
+        (ad) => new Date(ad.date) <= toDate
+      )
     }
 
-    // Apply newsletter count filter
+    // Apply newsletter count filter using the newsletters array length
     if (newslettersMin !== null) {
       filteredAds = filteredAds.filter(
-        (ad) => ad.newsletterCount >= newslettersMin
+        (ad) => ad.newsletters.length >= newslettersMin
       )
     }
     if (newslettersMax !== null) {
       filteredAds = filteredAds.filter(
-        (ad) => ad.newsletterCount <= newslettersMax
+        (ad) => ad.newsletters.length <= newslettersMax
       )
     }
 
-    // Apply sorting
+    // Modify sorting logic to handle arrays and objects
     filteredAds.sort((a, b) => {
-      const aValue = a[sortField]
-      const bValue = b[sortField]
+      const aValue = a[sortField] as string | number | Newsletter[] | Company
+      const bValue = b[sortField] as string | number | Newsletter[] | Company
       const modifier = sortDirection === 'asc' ? 1 : -1
 
-      if (typeof aValue === 'string') {
-        return aValue.localeCompare(bValue as string) * modifier
+      if (!aValue || !bValue) return 0
+
+      switch (typeof aValue) {
+        case 'string':
+          return aValue.localeCompare(bValue as string) * modifier
+        case 'number':
+          return (aValue - (bValue as number)) * modifier
+        case 'object':
+          if (Array.isArray(aValue)) {
+            return (aValue.length - (bValue as Newsletter[]).length) * modifier
+          }
+          return (aValue as Company).name.localeCompare((bValue as Company).name) * modifier
+        default:
+          return 0
       }
-      return ((aValue as number) - (bValue as number)) * modifier
     })
 
     // Apply pagination
