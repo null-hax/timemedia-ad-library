@@ -23,7 +23,7 @@ export function AdCard({ ad, onTagClick }: AdCardProps) {
         <div className="flex justify-between items-start gap-4">
           <div className="flex-1">
             <Link 
-              href={`/company/${ad.companyId}`}
+              href={`/company/${ad.company.slug}`}
               className="inline-block hover:text-blue-600"
             >
               <h3 className="font-semibold text-lg">{ad.companyName}</h3>
@@ -70,7 +70,7 @@ export function AdCard({ ad, onTagClick }: AdCardProps) {
               {topNewsletters.map(newsletter => (
                 <Link
                   key={newsletter.id}
-                  href={`/newsletter/${newsletter.id}`}
+                  href={`/newsletter/${newsletter.slug}`}
                   className="block text-sm hover:text-blue-600"
                 >
                   {newsletter.name}

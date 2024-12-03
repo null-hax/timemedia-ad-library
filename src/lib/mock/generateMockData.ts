@@ -1,4 +1,5 @@
 import { Ad, Newsletter, Company } from '@/types/ads'
+import { slugify } from '@/lib/utils'
 
 // Mock newsletters with traffic ranks
 const newsletters = [
@@ -12,13 +13,14 @@ const newsletters = [
   { id: 'n8', name: 'Web3 Daily', description: 'Crypto and web3 news', traffic_rank: 8 },
   { id: 'n9', name: 'Milk Road', description: 'Crypto market updates', traffic_rank: 9 },
   { id: 'n10', name: 'DeFi Weekly', description: 'Decentralized finance news', traffic_rank: 10 },
-].map(n => ({ ...n, id: Math.random().toString(36).substr(2, 9) })) as Newsletter[]
+].map(n => ({ ...n, id: Math.random().toString(36).substr(2, 9), slug: slugify(n.name) })) as Newsletter[]
 
 // Companies with tags
 const companies: Company[] = [
   {
     id: 'c1',
     name: 'Apple',
+    slug: 'apple',
     tags: ['tech', 'consumer electronics', 'mobile'],
     description: 'Consumer electronics and software',
     image: 'https://picsum.photos/200?grayscale'
@@ -26,6 +28,7 @@ const companies: Company[] = [
   {
     id: 'c2',
     name: 'Google',
+    slug: 'google',
     tags: ['tech', 'software', 'advertising'],
     description: 'Search and advertising technology',
     image: 'https://picsum.photos/200?grayscale'
@@ -33,6 +36,7 @@ const companies: Company[] = [
   {
     id: 'c3',
     name: 'Microsoft',
+    slug: 'microsoft',
     tags: ['tech', 'software', 'cloud'],
     description: 'Software and cloud services',
     image: 'https://picsum.photos/200?grayscale'
@@ -40,6 +44,7 @@ const companies: Company[] = [
   {
     id: 'c4',
     name: 'Amazon',
+    slug: 'amazon',
     tags: ['tech', 'ecommerce', 'cloud'],
     description: 'E-commerce and cloud computing',
     image: 'https://picsum.photos/200?grayscale'
@@ -47,6 +52,7 @@ const companies: Company[] = [
   {
     id: 'c5',
     name: 'Meta',
+    slug: 'meta',
     tags: ['tech', 'social media', 'advertising'],
     description: 'Social media and virtual reality',
     image: 'https://picsum.photos/200?grayscale'
@@ -54,6 +60,7 @@ const companies: Company[] = [
   {
     id: 'c6',
     name: 'Coinbase',
+    slug: 'coinbase',
     tags: ['crypto', 'fintech', 'exchange'],
     description: 'Cryptocurrency exchange',
     image: 'https://picsum.photos/200?grayscale'
@@ -61,6 +68,7 @@ const companies: Company[] = [
   {
     id: 'c7',
     name: 'Binance',
+    slug: 'binance',
     tags: ['crypto', 'fintech', 'exchange'],
     description: 'Cryptocurrency exchange',
     image: 'https://picsum.photos/200?grayscale'
@@ -68,6 +76,7 @@ const companies: Company[] = [
   {
     id: 'c8',
     name: 'Nike',
+    slug: 'nike',
     tags: ['retail', 'fashion', 'sports'],
     description: 'Sports apparel and equipment',
     image: 'https://picsum.photos/200?grayscale'
@@ -75,6 +84,7 @@ const companies: Company[] = [
   {
     id: 'c9',
     name: 'Adidas',
+    slug: 'adidas',
     tags: ['retail', 'fashion', 'sports'],
     description: 'Sports apparel and equipment',
     image: 'https://picsum.photos/200?grayscale'
@@ -82,11 +92,12 @@ const companies: Company[] = [
   {
     id: 'c10',
     name: 'Tesla',
+    slug: 'tesla',
     tags: ['tech', 'automotive', 'energy'],
     description: 'Electric vehicles and energy',
     image: 'https://picsum.photos/200?grayscale'
   },
-].map(c => ({ ...c, id: Math.random().toString(36).substr(2, 9) }))
+].map(c => ({ ...c, id: Math.random().toString(36).substr(2, 9), slug: slugify(c.name) }))
 
 const adCopyTemplates = [
   'Discover the new {product} - Revolutionary design meets exceptional performance',
@@ -109,7 +120,10 @@ const products = [
   'Blue',
 ]
 
-function randomDate(start: Date, end: Date): string {
+function randomDate(start: Date, daysRange: number): string {
+  const end = new Date(start)
+  end.setDate(end.getDate() + daysRange)
+  
   return new Date(
     start.getTime() + Math.random() * (end.getTime() - start.getTime())
   ).toISOString()
@@ -131,7 +145,10 @@ function generateMockAd(): Ad {
     companyName: company.name,
     companyId: company.id,
     adCopy: adTemplate.replace('{product}', product),
-    date: randomDate(new Date(2023, 0, 1), new Date()),
+    date: randomDate(
+      new Date('2024-11-02T00:00:00Z'),
+      30 // Generate dates within a 30-day range from Nov 2nd
+    ),
     newsletters: getRandomNewsletters(),
     company,
     image: company.image,

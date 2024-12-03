@@ -42,6 +42,7 @@ export interface ApiResponse<T> {
 export interface Newsletter {
   id: string
   name: string
+  slug: string
   description: string
   traffic_rank: number
 }
@@ -49,6 +50,7 @@ export interface Newsletter {
 export interface Company {
   id: string
   name: string
+  slug: string
   tags: string[]
   description?: string
   image?: string

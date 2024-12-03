@@ -25,7 +25,7 @@ export function NewsletterListModal({ newsletters }: NewsletterListModalProps) {
             {sortedNewsletters.map(newsletter => (
               <li key={newsletter.id} className="flex items-center justify-between">
                 <Link 
-                  href={`/newsletter/${newsletter.id}`}
+                  href={`/newsletter/${newsletter.slug}`}
                   className="hover:text-blue-600 transition-colors"
                 >
                   {newsletter.name}

@@ -75,7 +75,7 @@ export function TableView({
       render: (row: Ad) => (
         <div className="space-y-1">
           <Link 
-            href={`/company/${row.companyId}`}
+            href={`/company/${row.company.slug}`}
             className="font-medium hover:text-blue-600"
           >
             {row.companyName}
@@ -125,7 +125,7 @@ export function TableView({
               .map(n => (
                 <Link
                   key={n.id}
-                  href={`/newsletter/${n.id}`}
+                  href={`/newsletter/${n.slug}`}
                   className="block hover:text-blue-600"
                 >
                   {n.name}
