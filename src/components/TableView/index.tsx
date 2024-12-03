@@ -77,19 +77,19 @@ export function TableView({
       header: 'Company',
       sortable: true,
       render: (row: Ad) => (
-        <div className="space-y-1">
+        <div className="space-y-1.5">
           <Link
             href={`/company/${row.company.slug}`}
-            className="font-medium hover:text-blue-600"
+            className="text-base font-medium hover:text-blue-600 transition-colors"
           >
             {row.companyName}
           </Link>
-          <div className="flex flex-wrap gap-1">
+          <div className="flex flex-wrap gap-1.5">
             {row.company.tags.map((tag) => (
               <Badge
                 key={tag}
                 variant="secondary"
-                className="cursor-pointer hover:bg-secondary/80"
+                className="text-xs px-2 py-0.5 cursor-pointer hover:bg-secondary/80 transition-colors"
                 onClick={() => onTagClick?.(tag)}
               >
                 {tag}
@@ -104,7 +104,10 @@ export function TableView({
       header: 'Ad Copy',
       sortable: false,
       render: (row: Ad) => (
-        <div className="max-w-md truncate" title={row.adCopy}>
+        <div 
+          className="max-w-md text-sm text-muted-foreground line-clamp-2" 
+          title={row.adCopy}
+        >
           {row.adCopy}
         </div>
       ),
@@ -113,11 +116,15 @@ export function TableView({
       id: 'date' as const,
       header: 'Date Seen',
       sortable: true,
-      render: (row: Ad) => formatDate(row.date),
+      render: (row: Ad) => (
+        <div className="whitespace-nowrap text-sm text-muted-foreground">
+          {formatDate(row.date)}
+        </div>
+      ),
     },
     {
       id: 'newsletters' as const,
-      header: 'Newsletters',
+      header: 'Reach',
       sortable: true,
       render: (row: Ad) => {
         const sortedNewsletters = [...row.newsletters].sort(
@@ -126,8 +133,16 @@ export function TableView({
 
         return (
           <NewsletterListModal newsletters={sortedNewsletters}>
-            <button className="font-medium hover:text-blue-600">
-              {row.newsletters.length}
+            <button className="group flex items-center gap-2 hover:text-blue-600 transition-colors">
+              <span className="font-semibold text-lg">
+                {row.newsletters.length}
+              </span>
+              <span className="text-sm text-muted-foreground group-hover:text-blue-600/75">
+                {row.newsletters.length === 1 
+                  ? 'newsletter' 
+                  : 'newsletters'
+                }
+              </span>
             </button>
           </NewsletterListModal>
         )
@@ -136,14 +151,16 @@ export function TableView({
   ]
 
   return (
-    <div className="rounded-md border">
+    <div className="rounded-md border bg-card">
       <Table>
         <TableHeader>
-          <TableRow>
+          <TableRow className="hover:bg-muted/50">
             {columns.map((column) => (
               <TableHead
                 key={column.id}
-                className={column.sortable ? 'cursor-pointer' : ''}
+                className={`${
+                  column.sortable ? 'cursor-pointer' : ''
+                } bg-muted/50 h-11`}
                 onClick={() => {
                   if (column.sortable) {
                     onSort({
@@ -156,10 +173,12 @@ export function TableView({
                   }
                 }}
               >
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 font-medium">
                   {column.header}
                   {column.sortable && sort.field === column.id && (
-                    <span>{sort.direction === 'asc' ? '↑' : '↓'}</span>
+                    <span className="text-muted-foreground">
+                      {sort.direction === 'asc' ? '↑' : '↓'}
+                    </span>
                   )}
                 </div>
               </TableHead>
@@ -168,29 +187,37 @@ export function TableView({
         </TableHeader>
         <TableBody>
           {data.data.map((row) => (
-            <TableRow key={row.id}>
+            <TableRow 
+              key={row.id}
+              className="hover:bg-muted/50 transition-colors"
+            >
               {columns.map((column) => (
-                <TableCell key={column.id}>{column.render(row)}</TableCell>
+                <TableCell 
+                  key={column.id} 
+                  className="py-4"
+                >
+                  {column.render(row)}
+                </TableCell>
               ))}
             </TableRow>
           ))}
         </TableBody>
       </Table>
-      <div className="flex items-center justify-between px-4 py-2 border-t">
-        <div className="flex items-center gap-2">
+      <div className="flex items-center justify-between px-6 py-4 border-t bg-muted/50">
+        <div className="flex items-center gap-3">
           <Select
             value={pagination.pageSize.toString()}
             onValueChange={(value) =>
               onPaginationChange({ pageSize: Number(value), page: 1 })
             }
           >
-            <SelectTrigger className="w-[100px]">
+            <SelectTrigger className="w-[115px]">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               {[10, 20, 50, 100].map((size) => (
                 <SelectItem key={size} value={size.toString()}>
-                  {size} / page
+                  {size} per page
                 </SelectItem>
               ))}
             </SelectContent>
@@ -199,7 +226,7 @@ export function TableView({
             Total: {data.total} ads
           </span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <Button
             variant="outline"
             size="sm"
@@ -208,16 +235,13 @@ export function TableView({
           >
             Previous
           </Button>
-          <span className="text-sm">
-            Page {pagination.page} of{' '}
-            {Math.ceil(data.total / pagination.pageSize)}
+          <span className="text-sm text-muted-foreground">
+            Page {pagination.page} of {Math.ceil(data.total / pagination.pageSize)}
           </span>
           <Button
             variant="outline"
             size="sm"
-            disabled={
-              pagination.page >= Math.ceil(data.total / pagination.pageSize)
-            }
+            disabled={pagination.page >= Math.ceil(data.total / pagination.pageSize)}
             onClick={() => onPaginationChange({ page: pagination.page + 1 })}
           >
             Next
