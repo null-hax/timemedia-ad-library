@@ -1,10 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { generateMockAds } from '@/lib/mock/generateMockData'
 import type { Ad, ApiResponse, Company, Newsletter } from '@/types/ads'
+import { corsResponse, corsOptionsResponse } from '@/lib/cors'
 
 // Generate mock data once when the API route is initialized
 const TOTAL_MOCK_ADS = 100
 const mockAds = generateMockAds(TOTAL_MOCK_ADS)
+
+export async function OPTIONS() {
+  return corsOptionsResponse()
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -103,17 +108,10 @@ export async function GET(request: NextRequest) {
       pageSize,
     }
 
-    return NextResponse.json(response)
-  } catch (_error) {
-    // Log error in production environments
-    if (process.env.NODE_ENV === 'production') {
-      // Send to error tracking service
-      // Implementation will be added when error tracking service is integrated
-    }
-
-    return NextResponse.json(
-      { error: 'Internal Server Error' },
-      { status: 500 }
+    return corsResponse(NextResponse.json(response))
+  } catch (error) {
+    return corsResponse(
+      NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
     )
   }
 }

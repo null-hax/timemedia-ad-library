@@ -6,8 +6,18 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  experimental: {
-    // Remove experimental features
+  async headers() {
+    return [
+      {
+        // Allow CORS for all API routes
+        source: "/api/:path*",
+        headers: [
+          { key: "Access-Control-Allow-Origin", value: "*" },
+          { key: "Access-Control-Allow-Methods", value: "GET, OPTIONS" },
+          { key: "Access-Control-Allow-Headers", value: "Content-Type" },
+        ],
+      },
+    ]
   },
   images: {
     domains: ['picsum.photos'],
