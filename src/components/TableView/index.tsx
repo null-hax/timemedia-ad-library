@@ -34,6 +34,37 @@ interface TableViewProps {
   error: Error | null
 }
 
+const LoadingRow = () => (
+  <TableRow>
+    <TableCell colSpan={4}>
+      <div className="flex items-center space-x-4">
+        <div className="h-12 w-[200px] bg-muted animate-pulse rounded" />
+        <div className="h-8 flex-1 bg-muted animate-pulse rounded" />
+        <div className="h-8 w-[100px] bg-muted animate-pulse rounded" />
+        <div className="h-8 w-[100px] bg-muted animate-pulse rounded" />
+      </div>
+    </TableCell>
+  </TableRow>
+)
+
+const ErrorState = ({ error }: { error: Error }) => (
+  <TableRow>
+    <TableCell colSpan={4} className="text-center py-8 text-red-500">
+      <div className="space-y-2">
+        <p>Failed to load ads.</p>
+        <p className="text-sm text-muted-foreground">{error.message}</p>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={() => window.location.reload()}
+        >
+          Try Again
+        </Button>
+      </div>
+    </TableCell>
+  </TableRow>
+)
+
 export function TableView({
   filters,
   sort,
@@ -46,18 +77,14 @@ export function TableView({
   error,
 }: TableViewProps) {
   if (error) {
-    return (
-      <div className="text-center py-8 text-red-500">
-        Failed to load ads. Please try again.
-      </div>
-    )
+    return <ErrorState error={error} />
   }
 
   if (loading) {
     return (
       <div className="space-y-4">
         {Array.from({ length: pagination.pageSize }).map((_, i) => (
-          <div key={i} className="h-16 bg-muted animate-pulse rounded" />
+          <LoadingRow key={i} />
         ))}
       </div>
     )
@@ -172,6 +199,14 @@ export function TableView({
                     })
                   }
                 }}
+                role={column.sortable ? 'button' : undefined}
+                aria-sort={
+                  sort.field === column.id
+                    ? sort.direction === 'asc'
+                      ? 'ascending'
+                      : 'descending'
+                    : undefined
+                }
               >
                 <div className="flex items-center gap-2 font-medium">
                   {column.header}

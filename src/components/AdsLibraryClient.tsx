@@ -1,13 +1,13 @@
 'use client'
 
-import { TableView } from '@/components/TableView'
+import { useMemo, useCallback } from 'react'
+import { TableView } from '@/components/TableView/index'
 import { CardView } from '@/components/CardView'
 import { Filters } from '@/components/Filters'
 import { ViewToggle } from '@/components/ViewToggle'
 import { Hero } from '@/components/Hero'
 import { useAdsState } from '@/hooks/useAdsState'
 import { useAds } from '@/hooks/useAds'
-import { useCallback } from 'react'
 
 export default function AdsLibraryClient() {
   const {
@@ -21,12 +21,15 @@ export default function AdsLibraryClient() {
     setView,
   } = useAdsState()
 
-  // Fetch data at the parent level to share between views
-  const { data, loading, error } = useAds({
+  // Memoize the query parameters
+  const queryParams = useMemo(() => ({
     filters,
     sort,
     pagination,
-  })
+  }), [filters, sort, pagination])
+
+  // Fetch data using memoized params
+  const { data, loading, error } = useAds(queryParams)
 
   const handleTagClick = useCallback((tag: string) => {
     const currentTags = filters.tags || []
@@ -38,6 +41,17 @@ export default function AdsLibraryClient() {
     }
   }, [filters, setFilters])
 
+  // Memoize the shared props for both views
+  const viewProps = useMemo(() => ({
+    data: data ?? undefined,
+    loading,
+    error,
+    filters,
+    pagination,
+    onPaginationChange: setPagination,
+    onTagClick: handleTagClick,
+  }), [data, loading, error, filters, pagination, setPagination, handleTagClick])
+
   return (
     <div className="min-h-screen">
       <Hero />
@@ -48,26 +62,12 @@ export default function AdsLibraryClient() {
         </div>
         {view === 'table' ? (
           <TableView
-            filters={filters}
+            {...viewProps}
             sort={sort}
             onSort={setSort}
-            pagination={pagination}
-            onPaginationChange={setPagination}
-            onTagClick={handleTagClick}
-            data={data}
-            loading={loading}
-            error={error}
           />
         ) : (
-          <CardView
-            filters={filters}
-            pagination={pagination}
-            onPaginationChange={setPagination}
-            onTagClick={handleTagClick}
-            data={data}
-            loading={loading}
-            error={error}
-          />
+          <CardView {...viewProps} />
         )}
       </div>
     </div>
