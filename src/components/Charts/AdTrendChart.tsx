@@ -15,6 +15,7 @@ import {
   type ChartData,
   type ChartOptions,
 } from 'chart.js'
+import { chartColors } from '@/lib/utils/chartStyles'
 
 // Register ChartJS components
 ChartJS.register(
@@ -52,11 +53,12 @@ export function AdTrendChart({ data, days = 30 }: AdTrendChartProps) {
       {
         label: 'Number of Ads',
         data: dailyCounts,
-        borderColor: 'rgb(59, 130, 246)', // Blue
-        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+        borderColor: chartColors.primary,
+        backgroundColor: `${chartColors.primary}1A`, // 10% opacity
         tension: 0.3,
-        pointRadius: 4,
-        pointHoverRadius: 6,
+        pointRadius: 3,
+        pointHoverRadius: 5,
+        borderWidth: 2
       },
     ],
   }
@@ -71,6 +73,19 @@ export function AdTrendChart({ data, days = 30 }: AdTrendChartProps) {
       tooltip: {
         mode: 'index',
         intersect: false,
+        backgroundColor: 'white',
+        titleColor: chartColors.secondary,
+        bodyColor: chartColors.secondary,
+        borderColor: chartColors.border,
+        borderWidth: 1,
+        padding: 12,
+        bodyFont: {
+          size: 14,
+        },
+        titleFont: {
+          size: 14,
+          weight: 'bold',
+        },
         callbacks: {
           title: (tooltipItems) => {
             const date = dateRange[tooltipItems[0].dataIndex]
@@ -91,16 +106,18 @@ export function AdTrendChart({ data, days = 30 }: AdTrendChartProps) {
           maxRotation: 0,
           autoSkip: true,
           maxTicksLimit: 7,
+          color: chartColors.muted,
         },
       },
       y: {
         beginAtZero: true,
         grid: {
-          color: 'rgba(0, 0, 0, 0.1)',
+          color: chartColors.grid,
         },
         ticks: {
           precision: 0,
           stepSize: 1,
+          color: chartColors.muted,
         },
       },
     },
