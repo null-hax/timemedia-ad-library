@@ -29,15 +29,6 @@ export function Hero() {
             <p className="mt-6 max-w-md mx-auto text-xl text-muted-foreground sm:text-2xl md:mt-8 md:max-w-3xl">
               Track and analyze newsletter advertising across industries. Discover trends, monitor competitors, and make data-driven decisions.
             </p>
-            <div className="mt-10 flex justify-center gap-x-6">
-              <Button
-                size="lg"
-                className="bg-orange-500 hover:bg-orange-600 text-white px-8"
-                asChild
-              >
-                <a href="#filters">Get Started</a>
-              </Button>
-            </div>
             
             <div className="relative mt-12">
               {/* Stats grid with enhanced styling */}
