@@ -1,7 +1,6 @@
 'use client'
 
 import { companies, generateMockAds } from '@/lib/mock/generateMockData'
-import { AdCard } from '@/components/CardView/Card'
 import { AdTrendChart } from '@/components/Charts/AdTrendChart'
 import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
@@ -40,7 +39,7 @@ export default function CompanyPage() {
           )}
           <div>
             <h1 className="text-3xl font-bold">{company.name}</h1>
-            <p className="text-muted-foreground max-w-3xl">{company.description}</p>
+            <p className="text-muted-foreground">{company.description}</p>
           </div>
         </div>
         <div className="flex flex-wrap gap-2">
