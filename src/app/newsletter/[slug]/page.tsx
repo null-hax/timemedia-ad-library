@@ -8,6 +8,8 @@ import { notFound } from 'next/navigation'
 import { useParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { AdsGrid } from '@/components/AdsGrid'
+import { NewsletterInsights } from '@/components/Charts/NewsletterAdFrequency'
+import { generateMockAds } from '@/lib/mock/generateMockData'
 
 export default function NewsletterPage() {
   const params = useParams()
@@ -23,6 +25,11 @@ export default function NewsletterPage() {
   const handleTagClick = (tag: string) => {
     router.push(`/?tags=${tag}`)
   }
+
+  // Get ads for this newsletter
+  const newsletterAds = generateMockAds(100).filter(ad => 
+    ad.newsletters.some(n => n.id === newsletter.id)
+  )
 
   return (
     <div className="container mx-auto py-8 space-y-8">
@@ -45,12 +52,12 @@ export default function NewsletterPage() {
       </header>
 
       <div className="grid gap-8 grid-cols-1 lg:grid-cols-3">
-        <Card className="p-4 lg:col-span-2">
-          <h2 className="text-xl font-semibold mb-2">Ad Frequency</h2>
-          <div className="h-48">
-            <AdTrendChart data={[]} />
-          </div>
-        </Card>
+        <div className="lg:col-span-2">
+          <NewsletterInsights 
+            newsletter={newsletter}
+            ads={newsletterAds}
+          />
+        </div>
 
         <Card className="p-6">
           <h2 className="text-xl font-semibold mb-4">Newsletter Stats</h2>
