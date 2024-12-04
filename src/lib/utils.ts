@@ -33,3 +33,10 @@ export function sanitizeString(str: string): string {
     .replace(/['']/g, '\'')  // Replace smart quotes with straight quotes
     .replace(/[""]/g, '"')   // Replace smart double quotes with straight quotes
 }
+
+export function formatNumber(num: number): string {
+  return new Intl.NumberFormat('en-US', { 
+    notation: 'compact',
+    maximumFractionDigits: 1 
+  }).format(num)
+}
