@@ -56,7 +56,7 @@ export default function NewsletterPage() {
       label: 'Unique Advertisers',
       value: uniqueAdvertisers,
       icon: Users,
-      description: 'Different companies that have advertised'
+      description: 'Companies that have advertised'
     },
     {
       label: 'Total Ads',
@@ -74,7 +74,7 @@ export default function NewsletterPage() {
       label: 'Avg. Ads per Issue',
       value: avgAdsPerIssue,
       icon: Mail,
-      description: 'Based on last 90 days'
+      description: 'Ads per newsletter release'
     }
   ]
 
@@ -96,7 +96,7 @@ export default function NewsletterPage() {
             <div className="space-y-3">
               <div>
                 <h1 className="text-3xl font-bold">{newsletter.name}</h1>
-                <p className="text-muted-foreground max-w-3xl mt-2">
+                <p className="text-muted-foreground mt-2">
                   {newsletter.description}
                 </p>
               </div>
@@ -120,23 +120,28 @@ export default function NewsletterPage() {
         </div>
 
         {/* Quick Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {quickStats.map((stat, i) => (
-            <Card key={i} className="p-4">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">
-                    {stat.label}
-                  </p>
-                  <p className="text-2xl font-bold mt-1">{stat.value}</p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {stat.description}
-                  </p>
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            {quickStats.map((stat, i) => (
+              <Card key={i} className="p-4">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">
+                      {stat.label}
+                    </p>
+                    <p className="text-2xl font-bold mt-1">{stat.value}</p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {stat.description}
+                    </p>
+                  </div>
+                  <stat.icon className="h-4 w-4 text-muted-foreground" />
                 </div>
-                <stat.icon className="h-4 w-4 text-muted-foreground" />
-              </div>
-            </Card>
-          ))}
+              </Card>
+            ))}
+          </div>
+          <p className="text-sm text-muted-foreground">
+            * Statistics based on data from the last 90 days
+          </p>
         </div>
 
         {/* Main Content Grid */}

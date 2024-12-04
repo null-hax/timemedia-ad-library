@@ -39,7 +39,7 @@ export default function CompanyPage() {
           )}
           <div>
             <h1 className="text-3xl font-bold">{company.name}</h1>
-            <p className="text-muted-foreground">{company.description}</p>
+            <p className="text-muted-foreground mt-2">{company.description}</p>
           </div>
         </div>
         <div className="flex flex-wrap gap-2">
