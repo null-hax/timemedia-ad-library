@@ -66,7 +66,7 @@ export default function CompanyPage() {
         </Card>
 
         <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Newsletter Presence</h2>
+          <h2 className="text-xl font-semibold mb-4">Audience Profile</h2>
           <div className="prose max-w-none">
             <p>
               {company.name} has been primarily sponsoring newsletters with audiences that fit a 
