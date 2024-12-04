@@ -10,7 +10,7 @@ export function Hero() {
       </div>
       
       <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="py-20 sm:py-24 lg:py-32">
+        <div className="py-16">
           <div className="text-center">
             <div className="flex justify-center">
               <div className="inline-flex items-center rounded-full bg-orange-50 px-6 py-2 text-sm font-medium text-orange-600 ring-1 ring-inset ring-orange-500/20 mb-8">
@@ -30,15 +30,16 @@ export function Hero() {
               Track and analyze newsletter advertising across industries. Discover trends, monitor competitors, and make data-driven decisions.
             </p>
             <div className="mt-10 flex justify-center gap-x-6">
-              <Button size="lg" className="bg-orange-500 hover:bg-orange-600 text-white px-8">
-                Get Started
-              </Button>
-              <Button size="lg" variant="outline" className="border-orange-200 hover:bg-orange-50 text-orange-600">
-                Learn More
+              <Button
+                size="lg"
+                className="bg-orange-500 hover:bg-orange-600 text-white px-8"
+                asChild
+              >
+                <a href="#filters">Get Started</a>
               </Button>
             </div>
             
-            <div className="relative mt-20">
+            <div className="relative mt-12">
               {/* Stats grid with enhanced styling */}
               <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
                 <div className="relative flex flex-col items-center p-6 bg-white/50 rounded-2xl shadow-sm ring-1 ring-black/5 transition-transform hover:-translate-y-1">
