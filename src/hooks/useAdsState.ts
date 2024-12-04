@@ -3,7 +3,7 @@
 import { useCallback, useState } from 'react'
 import { FilterState, PaginationState, SortState, ViewType } from '@/types/ads'
 
-const DEFAULT_FILTER_STATE: FilterState = {
+export const DEFAULT_FILTER_STATE: FilterState = {
   search: '',
   dateRange: {
     from: null,
