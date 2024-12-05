@@ -206,6 +206,7 @@ export function NewsletterInsights({ newsletter, ads }: NewsletterInsightsProps)
 
   const sortedCategories = Object.entries(categoryData)
     .sort(([, a], [, b]) => b - a)
+    .slice(0, 10)
 
   const categoryChartData: ChartData<'bar'> = {
     labels: sortedCategories.map(([name]) => name),
@@ -274,7 +275,7 @@ export function NewsletterInsights({ newsletter, ads }: NewsletterInsightsProps)
   const viewOptions = {
     sponsors: {
       title: 'Top Advertisers',
-      description: `Most frequent advertisers in ${newsletter.name}`
+      description: `Top 10 most frequent advertisers in ${newsletter.name}`
     },
     activity: {
       title: 'Weekly Activity',
@@ -282,7 +283,7 @@ export function NewsletterInsights({ newsletter, ads }: NewsletterInsightsProps)
     },
     categories: {
       title: 'Industry Breakdown',
-      description: 'Distribution of ads by advertiser industry',
+      description: 'Distribution of ads by top 10 advertiser industries',
     },
   }
 
