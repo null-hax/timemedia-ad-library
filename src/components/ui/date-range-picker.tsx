@@ -1,6 +1,6 @@
 'use client'
 
-import { addDays, format, startOfDay, subDays } from 'date-fns'
+import { format, startOfDay, subDays } from 'date-fns'
 import { Calendar as CalendarIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
@@ -10,13 +10,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { cn } from '@/lib/utils'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './select'
-
-const presets = [
-  { label: 'Last 7 days', days: 7 },
-  { label: 'Last 30 days', days: 30 },
-  { label: 'Last 90 days', days: 90 },
-]
+import { DateRange } from 'react-day-picker'
 
 interface DateRangePickerProps {
   from: Date | null
@@ -31,49 +25,37 @@ export function ChartDateRangePicker({
   onChange,
   align = 'end'
 }: DateRangePickerProps) {
-  const selected = {
+  const selected: DateRange = {
     from: from ? startOfDay(from) : undefined,
     to: to ? startOfDay(to) : undefined,
   }
 
-  const handlePresetChange = (days: number) => {
-    const to = startOfDay(new Date())
-    const from = subDays(to, days - 1)
-    onChange(from, to)
-  }
-
-  const handleSelect = (range: { from?: Date; to?: Date } | undefined) => {
+  const handleSelect = (range: DateRange | undefined) => {
     if (!range) {
       onChange(null, null)
       return
     }
 
-    if (range.from && range.to && range.from > range.to) {
-      onChange(range.to, range.from)
+    const { from: newFrom, to: newTo } = range
+
+    // Allow selecting just the start date
+    if (newFrom && !newTo) {
+      onChange(newFrom, null)
       return
     }
 
-    onChange(range.from || null, range.to || null)
+    // When both dates are selected, ensure they're in order
+    if (newFrom && newTo) {
+      if (newFrom > newTo) {
+        onChange(newTo, newFrom)
+      } else {
+        onChange(newFrom, newTo)
+      }
+    }
   }
 
   return (
-    <div className="flex items-center gap-2">
-      <Select
-        onValueChange={(value) => handlePresetChange(Number(value))}
-        defaultValue="30"
-      >
-        <SelectTrigger className="h-8 w-[130px]">
-          <SelectValue placeholder="Select range" />
-        </SelectTrigger>
-        <SelectContent>
-          {presets.map((preset) => (
-            <SelectItem key={preset.days} value={preset.days.toString()}>
-              {preset.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-
+    <div className="flex items-center">
       <Popover>
         <PopoverTrigger asChild>
           <Button
@@ -99,6 +81,7 @@ export function ChartDateRangePicker({
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align={align}>
           <Calendar
+            initialFocus
             mode="range"
             defaultMonth={from || new Date()}
             selected={selected}

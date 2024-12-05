@@ -1,11 +1,9 @@
 'use client'
 
 import * as React from "react"
-import { DayPicker, DayPickerRangeProps } from "react-day-picker"
+import { DayPicker } from "react-day-picker"
 
-export type CalendarProps = React.ComponentProps<typeof DayPicker> & {
-  mode?: 'single' | 'range' | 'multiple'
-}
+export type CalendarProps = React.ComponentProps<typeof DayPicker>
 
 function Calendar({
   className,

@@ -17,7 +17,7 @@ export default function CompanyPage() {
   const params = useParams()
   const slug = params.slug as string
   const router = useRouter()
-  const [dateRange, setDateRange] = useState<{from: Date; to: Date}>({
+  const [dateRange, setDateRange] = useState<{from: Date | null; to: Date | null}>({
     from: subDays(new Date(), 30),
     to: new Date()
   })
@@ -29,9 +29,7 @@ export default function CompanyPage() {
   }
 
   const handleDateRangeChange = (from: Date | null, to: Date | null) => {
-    if (from && to) {
-      setDateRange({ from, to })
-    }
+    setDateRange({ from, to })
   }
 
   const handleTagClick = (tag: string) => {

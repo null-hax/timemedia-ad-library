@@ -20,11 +20,16 @@ import {
 import { useState } from 'react'
 import { subDays, startOfDay } from 'date-fns'
 
+function getDateRangeText(from: Date, to: Date): string {
+  const diffInDays = Math.floor((to.getTime() - from.getTime()) / (1000 * 60 * 60 * 24)) + 1
+  return `${diffInDays} days`
+}
+
 export default function NewsletterPage() {
   const params = useParams()
   const slug = params.slug as string
   const router = useRouter()
-  const [dateRange, setDateRange] = useState<{from: Date; to: Date}>({
+  const [dateRange, setDateRange] = useState<{from: Date | null; to: Date | null}>({
     from: subDays(new Date(), 30),
     to: new Date()
   })
@@ -93,10 +98,13 @@ export default function NewsletterPage() {
   ]
 
   const handleDateRangeChange = (from: Date | null, to: Date | null) => {
-    if (from && to) {
-      setDateRange({ from, to })
-    }
+    setDateRange({ from, to })
   }
+
+  // Update the stats footer text based on date range
+  const statsTimeText = dateRange.from && dateRange.to
+    ? getDateRangeText(dateRange.from, dateRange.to)
+    : "90 days" // default fallback
 
   return (
     <div className="container mx-auto py-8 space-y-6 pb-0">
@@ -151,7 +159,7 @@ export default function NewsletterPage() {
             ))}
           </div>
           <p className="text-sm text-muted-foreground">
-            * Statistics based on data from the last 90 days
+            * Statistics based on data from the last {statsTimeText}
           </p>
         </div>
 
