@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { format, startOfWeek } from 'date-fns'
+import { format, startOfWeek, startOfDay } from 'date-fns'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -26,6 +26,7 @@ import {
 } from 'chart.js'
 import { Bar, Line } from 'react-chartjs-2'
 import { getLineColors, chartColors } from '@/lib/utils/chartStyles'
+import { ChartDateRangePicker } from '@/components/ui/date-range-picker'
 
 ChartJS.register(
   CategoryScale,
@@ -43,13 +44,33 @@ type ViewType = 'sponsors' | 'activity' | 'categories'
 interface NewsletterInsightsProps {
   newsletter: Newsletter
   ads: Ad[]
+  onDateRangeChange?: (from: Date | null, to: Date | null) => void
+  dateRange?: {
+    from: Date | null
+    to: Date | null
+  }
 }
 
-export function NewsletterInsights({ newsletter, ads }: NewsletterInsightsProps) {
+// Add type for weekly data at the top of the file
+type WeeklyDataMap = Record<string, Record<string, number>>
+
+export function NewsletterInsights({ 
+  newsletter, 
+  ads,
+  onDateRangeChange,
+  dateRange = { from: null, to: null }
+}: NewsletterInsightsProps) {
   const [view, setView] = useState<ViewType>('activity')
 
-  // Process data for sponsors chart
-  const sponsorsData = ads.reduce((acc, ad) => {
+  // Filter ads based on date range
+  const filteredAds = ads.filter(ad => {
+    if (!dateRange.from || !dateRange.to) return true
+    const adDate = startOfDay(new Date(ad.date))
+    return adDate >= startOfDay(dateRange.from) && adDate <= startOfDay(dateRange.to)
+  })
+
+  // Process data for sponsors chart using filteredAds
+  const sponsorsData = filteredAds.reduce((acc, ad) => {
     const company = ad.company.name
     acc[company] = (acc[company] || 0) + 1
     return acc
@@ -94,7 +115,7 @@ export function NewsletterInsights({ newsletter, ads }: NewsletterInsightsProps)
   }
 
   // Process data for activity timeline
-  const timelineDataMap = ads.reduce((acc, ad) => {
+  const timelineDataMap = filteredAds.reduce((acc, ad) => {
     const date = format(new Date(ad.date), 'MMM d')
     const company = ad.company.name
     
@@ -110,8 +131,8 @@ export function NewsletterInsights({ newsletter, ads }: NewsletterInsightsProps)
     .map(([name]) => name)
 
   // Add this function to process data for weekly view
-  function getWeeklyData(timelineDataMap: Record<string, Record<string, number>>, companies: string[]) {
-    const weeklyData: Record<string, Record<string, number>> = {}
+  function getWeeklyData(timelineDataMap: WeeklyDataMap, companies: string[]): WeeklyDataMap {
+    const weeklyData: WeeklyDataMap = {}
     
     Object.entries(timelineDataMap).forEach(([date, data]) => {
       const weekStart = format(startOfWeek(new Date(date)), 'MMM d')
@@ -144,7 +165,7 @@ export function NewsletterInsights({ newsletter, ads }: NewsletterInsightsProps)
     labels: Object.keys(getWeeklyData(timelineDataMap, top5Companies)),
     datasets: top5Companies.map((company, index) => {
       const colors = getLineColors(index)
-      const weeklyData = getWeeklyData(timelineDataMap, top5Companies)
+      const weeklyData: WeeklyDataMap = getWeeklyData(timelineDataMap, top5Companies)
       
       return {
         label: company,
@@ -216,7 +237,7 @@ export function NewsletterInsights({ newsletter, ads }: NewsletterInsightsProps)
   }
 
   // Process data for category breakdown
-  const categoryData = ads.reduce((acc, ad) => {
+  const categoryData = filteredAds.reduce((acc, ad) => {
     ad.company.tags.forEach(tag => {
       acc[tag] = (acc[tag] || 0) + 1
     })
@@ -321,19 +342,26 @@ export function NewsletterInsights({ newsletter, ads }: NewsletterInsightsProps)
             {viewOptions[view].description}
           </p>
         </div>
-        <Select
-          value={view}
-          onValueChange={(value) => setView(value as ViewType)}
-        >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="activity">Activity Timeline</SelectItem>
-            <SelectItem value="sponsors">Top Advertisers</SelectItem>
-            <SelectItem value="categories">Industry Breakdown</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="flex items-center gap-4">
+          <ChartDateRangePicker
+            from={dateRange.from}
+            to={dateRange.to}
+            onChange={onDateRangeChange || (() => {})}
+          />
+          <Select
+            value={view}
+            onValueChange={(value) => setView(value as ViewType)}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="activity">Activity Timeline</SelectItem>
+              <SelectItem value="sponsors">Top Advertisers</SelectItem>
+              <SelectItem value="categories">Industry Breakdown</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       <div className="h-[300px]">

@@ -11,6 +11,8 @@ export const DEFAULT_FILTER_STATE: FilterState = {
   },
   newsletterIds: [],
   tags: [],
+  companyId: null,
+  newsletterId: null
 }
 
 const DEFAULT_SORT_STATE: SortState = {
@@ -25,22 +27,36 @@ const DEFAULT_PAGINATION_STATE: PaginationState = {
 
 const DEFAULT_VIEW: ViewType = 'card'
 
+const isValidDateRange = (from: Date | null, to: Date | null): boolean => {
+  if (!from || !to) return false
+  return from <= to
+}
+
 export function useAdsState(initialFilters: Partial<FilterState> = {}) {
-  const mergedFilters = {
-    ...DEFAULT_FILTER_STATE,
-    ...initialFilters
+  const validatedInitialFilters = {
+    ...initialFilters,
+    dateRange: initialFilters.dateRange && isValidDateRange(initialFilters.dateRange.from, initialFilters.dateRange.to)
+      ? initialFilters.dateRange
+      : DEFAULT_FILTER_STATE.dateRange
   }
 
-  const [filters, setFiltersState] = useState<FilterState>(mergedFilters)
+  const [filters, setFiltersState] = useState<FilterState>({
+    ...DEFAULT_FILTER_STATE,
+    ...validatedInitialFilters
+  })
   const [sort, setSortState] = useState<SortState>(DEFAULT_SORT_STATE)
   const [pagination, setPaginationState] = useState<PaginationState>(DEFAULT_PAGINATION_STATE)
   const [view, setViewState] = useState<ViewType>(DEFAULT_VIEW)
 
-  const setFilters = useCallback((newFilters: Partial<FilterState>) => {
-    setFiltersState(prev => ({
-      ...prev,
-      ...newFilters
-    }))
+  const setFilters = useCallback((newFilters: Partial<FilterState> | ((prev: FilterState) => FilterState)) => {
+    if (typeof newFilters === 'function') {
+      setFiltersState(newFilters)
+    } else {
+      setFiltersState(prev => ({
+        ...prev,
+        ...newFilters
+      }))
+    }
     setPaginationState(prev => ({ ...prev, page: 1 }))
   }, [])
 

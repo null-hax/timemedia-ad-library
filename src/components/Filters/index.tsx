@@ -1,7 +1,7 @@
 'use client'
 
 import { Input } from '@/components/ui/input'
-import { DateRangePicker } from './DateRangePicker'
+import { ChartDateRangePicker } from '@/components/ui/date-range-picker'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { X } from 'lucide-react'
@@ -39,6 +39,13 @@ export function Filters({ filters, onChange }: FiltersProps) {
     onChange({ ...filters, tags: newTags })
   }
 
+  const handleDateRangeChange = (from: Date | null, to: Date | null) => {
+    onChange({
+      ...filters,
+      dateRange: { from, to }
+    })
+  }
+
   return (
     <div className="space-y-4 sticky top-0 bg-background z-10 py-6 shadow-sm">
       <div className="container mx-auto">
@@ -55,18 +62,11 @@ export function Filters({ filters, onChange }: FiltersProps) {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           <div>
             <label className="text-sm font-medium mb-2 block">Date Range</label>
-            <DateRangePicker
-              from={filters.dateRange.from?.toISOString() || null}
-              to={filters.dateRange.to?.toISOString() || null}
-              onChange={(from, to) => {
-                onChange({
-                  ...filters,
-                  dateRange: {
-                    from: from ? new Date(from) : null,
-                    to: to ? new Date(to) : null,
-                  },
-                })
-              }}
+            <ChartDateRangePicker
+              from={filters.dateRange.from}
+              to={filters.dateRange.to}
+              onChange={handleDateRangeChange}
+              align="start"
             />
           </div>
 

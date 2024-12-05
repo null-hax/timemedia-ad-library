@@ -17,11 +17,17 @@ import {
   Mail,
   Tag
 } from 'lucide-react'
+import { useState } from 'react'
+import { subDays, startOfDay } from 'date-fns'
 
 export default function NewsletterPage() {
   const params = useParams()
   const slug = params.slug as string
   const router = useRouter()
+  const [dateRange, setDateRange] = useState<{from: Date; to: Date}>({
+    from: subDays(new Date(), 30),
+    to: new Date()
+  })
 
   const newsletter = newsletters.find((n) => n.slug === slug)
 
@@ -33,10 +39,19 @@ export default function NewsletterPage() {
     router.push(`/?tags=${tag}`)
   }
 
-  // Get ads for this newsletter
-  const newsletterAds = generateMockAds(100).filter(ad => 
-    ad.newsletters.some(n => n.id === newsletter.id)
-  )
+  // Get ads for this newsletter with date range filter
+  const newsletterAds = generateMockAds(100)
+    .filter(ad => {
+      // Filter by newsletter
+      if (!ad.newsletters.some(n => n.id === newsletter.id)) return false
+      
+      // Filter by date range
+      if (dateRange.from && dateRange.to) {
+        const adDate = startOfDay(new Date(ad.date))
+        return adDate >= startOfDay(dateRange.from) && adDate <= startOfDay(dateRange.to)
+      }
+      return true
+    })
 
   // Calculate quick stats
   const uniqueAdvertisers = new Set(newsletterAds.map(ad => ad.companyId)).size
@@ -76,6 +91,12 @@ export default function NewsletterPage() {
       description: 'Ads per newsletter release'
     }
   ]
+
+  const handleDateRangeChange = (from: Date | null, to: Date | null) => {
+    if (from && to) {
+      setDateRange({ from, to })
+    }
+  }
 
   return (
     <div className="container mx-auto py-8 space-y-6 pb-0">
@@ -139,13 +160,18 @@ export default function NewsletterPage() {
           <NewsletterInsights 
             newsletter={newsletter}
             ads={newsletterAds}
+            dateRange={dateRange}
+            onDateRangeChange={handleDateRangeChange}
           />
           
           <Separator className="mt-8" />
           
           <div>
             <AdsGrid 
-              initialFilters={{ newsletterId: newsletter.id }}
+              initialFilters={{ 
+                newsletterId: newsletter.id,
+                dateRange: dateRange
+              }}
               showFilters={false}
               showViewToggle={true}
             />

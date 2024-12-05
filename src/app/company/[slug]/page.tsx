@@ -10,11 +10,17 @@ import Image from 'next/image'
 import { AdsGrid } from '@/components/AdsGrid'
 import { Tag } from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
+import { useState } from 'react'
+import { subDays } from 'date-fns'
 
 export default function CompanyPage() {
   const params = useParams()
   const slug = params.slug as string
   const router = useRouter()
+  const [dateRange, setDateRange] = useState<{from: Date; to: Date}>({
+    from: subDays(new Date(), 30),
+    to: new Date()
+  })
 
   const company = companies.find((c) => c.slug === slug)
 
@@ -22,9 +28,29 @@ export default function CompanyPage() {
     notFound()
   }
 
+  const handleDateRangeChange = (from: Date | null, to: Date | null) => {
+    if (from && to) {
+      setDateRange({ from, to })
+    }
+  }
+
   const handleTagClick = (tag: string) => {
     router.push(`/?tags=${tag}`)
   }
+
+  // Get ads for this company with date range filter
+  const companyAds = generateMockAds(100)
+    .filter(ad => {
+      // Filter by company
+      if (ad.companyId !== company.id) return false
+      
+      // Filter by date range
+      if (dateRange.from && dateRange.to) {
+        const adDate = new Date(ad.date)
+        return adDate >= dateRange.from && adDate <= dateRange.to
+      }
+      return true
+    })
 
   return (
     <div className="container mx-auto py-8 space-y-8 pb-0">
@@ -98,7 +124,11 @@ export default function CompanyPage() {
         <Card className="p-4 lg:col-span-2">
           <h2 className="text-xl font-semibold mb-2">Ad Frequency</h2>
           <div className="h-48">
-            <AdTrendChart data={generateMockAds(100)} />
+            <AdTrendChart 
+              data={companyAds}
+              dateRange={dateRange}
+              onDateRangeChange={handleDateRangeChange}
+            />
           </div>
         </Card>
 
@@ -124,7 +154,10 @@ export default function CompanyPage() {
         <Separator />
 
           <AdsGrid 
-            initialFilters={{ companyId: company.id }}
+            initialFilters={{ 
+              companyId: company.id,
+              dateRange
+            }}
             showFilters={false}
             showViewToggle={true}
           />

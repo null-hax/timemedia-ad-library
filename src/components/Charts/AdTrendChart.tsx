@@ -16,6 +16,7 @@ import {
   type ChartOptions,
 } from 'chart.js'
 import { chartColors } from '@/lib/utils/chartStyles'
+import { ChartDateRangePicker } from '@/components/ui/date-range-picker'
 
 // Register ChartJS components
 ChartJS.register(
@@ -31,24 +32,40 @@ ChartJS.register(
 interface AdTrendChartProps {
   data: Ad[]
   days?: number
+  onDateRangeChange?: (from: Date | null, to: Date | null) => void
+  dateRange?: {
+    from: Date | null
+    to: Date | null
+  }
 }
 
-export function AdTrendChart({ data, days = 30 }: AdTrendChartProps) {
-  // Generate date range
-  const endDate = startOfDay(new Date())
-  const startDate = subDays(endDate, days)
-  const dateRange = eachDayOfInterval({ start: startDate, end: endDate })
+export function AdTrendChart({ 
+  data, 
+  days = 30,
+  onDateRangeChange,
+  dateRange = { from: null, to: null }
+}: AdTrendChartProps) {
+  // Use dateRange if provided, otherwise fallback to days prop
+  const endDate = dateRange.to ? startOfDay(dateRange.to) : startOfDay(new Date())
+  const startDate = dateRange.from ? startOfDay(dateRange.from) : subDays(endDate, days)
+  const dateInterval = eachDayOfInterval({ start: startDate, end: endDate })
+
+  // Filter data based on date range
+  const filteredData = data.filter(ad => {
+    const adDate = startOfDay(new Date(ad.date))
+    return adDate >= startDate && adDate <= endDate
+  })
 
   // Process data
-  const dailyCounts = dateRange.map((date) => {
-    const dayAds = data.filter(
+  const dailyCounts = dateInterval.map((date) => {
+    const dayAds = filteredData.filter(
       (ad) => startOfDay(new Date(ad.date)).getTime() === date.getTime()
     )
     return dayAds.length
   })
 
   const chartData: ChartData<'line'> = {
-    labels: dateRange.map((date) => format(date, 'MMM d')),
+    labels: dateInterval.map((date) => format(date, 'MMM d')),
     datasets: [
       {
         label: 'Number of Ads',
@@ -88,7 +105,7 @@ export function AdTrendChart({ data, days = 30 }: AdTrendChartProps) {
         },
         callbacks: {
           title: (tooltipItems) => {
-            const date = dateRange[tooltipItems[0].dataIndex]
+            const date = dateInterval[tooltipItems[0].dataIndex]
             return format(date, 'MMMM d, yyyy')
           },
           label: (context) => {
@@ -130,6 +147,15 @@ export function AdTrendChart({ data, days = 30 }: AdTrendChartProps) {
 
   return (
     <div className="w-full h-full">
+      {onDateRangeChange && (
+        <div className="flex justify-end mb-4">
+          <ChartDateRangePicker
+            from={dateRange.from}
+            to={dateRange.to}
+            onChange={onDateRangeChange}
+          />
+        </div>
+      )}
       <Line data={chartData} options={options} />
     </div>
   )

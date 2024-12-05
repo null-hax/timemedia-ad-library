@@ -9,11 +9,17 @@ import type {
   ApiResponse,
 } from '@/types/ads'
 import { generateMockAds } from '@/lib/mock/generateMockData'
+import { startOfDay } from 'date-fns'
 
 interface UseAdsProps {
   filters: FilterState
   sort: SortState
   pagination: PaginationState
+}
+
+// Add date validation helper
+const isValidDate = (date: any): date is Date => {
+  return date instanceof Date && !isNaN(date.getTime())
 }
 
 export function useAds({ filters, sort, pagination }: UseAdsProps) {
@@ -26,6 +32,19 @@ export function useAds({ filters, sort, pagination }: UseAdsProps) {
     try {
       // Generate mock data
       let filteredAds = generateMockAds(100)
+
+      // Apply date range filter first with validation
+      if (filters.dateRange.from || filters.dateRange.to) {
+        filteredAds = filteredAds.filter(ad => {
+          const adDate = startOfDay(new Date(ad.date))
+          const from = filters.dateRange.from && isValidDate(filters.dateRange.from) ? startOfDay(filters.dateRange.from) : null
+          const to = filters.dateRange.to && isValidDate(filters.dateRange.to) ? startOfDay(filters.dateRange.to) : null
+
+          if (from && adDate < from) return false
+          if (to && adDate > to) return false
+          return true
+        })
+      }
 
       // Apply filters
       if (filters.search) {
@@ -59,15 +78,6 @@ export function useAds({ filters, sort, pagination }: UseAdsProps) {
         filteredAds = filteredAds.filter(ad => 
           filters.tags.some(tag => ad.company.tags.includes(tag))
         )
-      }
-
-      if (filters.dateRange.from || filters.dateRange.to) {
-        filteredAds = filteredAds.filter(ad => {
-          const adDate = new Date(ad.date)
-          if (filters.dateRange.from && adDate < filters.dateRange.from) return false
-          if (filters.dateRange.to && adDate > filters.dateRange.to) return false
-          return true
-        })
       }
 
       // Apply sorting
