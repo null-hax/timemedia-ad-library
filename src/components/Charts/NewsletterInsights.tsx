@@ -54,6 +54,20 @@ interface NewsletterInsightsProps {
 // Add type for weekly data at the top of the file
 type WeeklyDataMap = Record<string, Record<string, number>>
 
+// Add this type and helper function near the top of the file
+type TimeRange = 'daily' | 'weekly'
+
+function getTimeRange(from: Date | null, to: Date | null): TimeRange {
+  if (!from || !to) return 'weekly'
+  const diffInDays = Math.ceil((to.getTime() - from.getTime()) / (1000 * 60 * 60 * 24))
+  return diffInDays <= 7 ? 'daily' : 'weekly'
+}
+
+// Add this helper function to sort dates
+function sortDates(dates: string[]): string[] {
+  return dates.sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
+}
+
 export function NewsletterInsights({ 
   newsletter, 
   ads,
@@ -61,6 +75,7 @@ export function NewsletterInsights({
   dateRange = { from: null, to: null }
 }: NewsletterInsightsProps) {
   const [view, setView] = useState<ViewType>('activity')
+  const timeRange = getTimeRange(dateRange.from, dateRange.to)
 
   // Filter ads based on date range
   const filteredAds = ads.filter(ad => {
@@ -162,14 +177,18 @@ export function NewsletterInsights({
 
   // Update the timeline chart data configuration
   const timelineChartData: ChartData<'bar'> = {
-    labels: Object.keys(getWeeklyData(timelineDataMap, top5Companies)),
+    labels: timeRange === 'daily' 
+      ? sortDates(Object.keys(timelineDataMap))
+      : Object.keys(getWeeklyData(timelineDataMap, top5Companies)),
     datasets: top5Companies.map((company, index) => {
       const colors = getLineColors(index)
-      const weeklyData: WeeklyDataMap = getWeeklyData(timelineDataMap, top5Companies)
+      const sortedData = timeRange === 'daily'
+        ? sortDates(Object.keys(timelineDataMap)).map(date => timelineDataMap[date][company] || 0)
+        : Object.values(getWeeklyData(timelineDataMap, top5Companies)).map(week => week[company])
       
       return {
         label: company,
-        data: Object.values(weeklyData).map(week => week[company]),
+        data: sortedData,
         backgroundColor: colors.line,
         borderRadius: 4,
         borderSkipped: false,
@@ -318,14 +337,17 @@ export function NewsletterInsights({
     },
   }
 
+  // Update viewOptions to be dynamic based on timeRange
   const viewOptions = {
     sponsors: {
       title: 'Top Advertisers',
       description: `Top 10 most frequent advertisers in ${newsletter.name}`
     },
     activity: {
-      title: 'Weekly Activity',
-      description: 'Advertising frequency by company per week'
+      title: timeRange === 'daily' ? 'Daily Activity' : 'Weekly Activity',
+      description: timeRange === 'daily' 
+        ? 'Advertising frequency by company per day'
+        : 'Advertising frequency by company per week'
     },
     categories: {
       title: 'Industry Breakdown',

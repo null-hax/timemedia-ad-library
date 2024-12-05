@@ -187,7 +187,7 @@ function seededRandom(seed: number) {
 const getRandom = seededRandom(123) // Fixed seed
 
 // Add a fixed date for server-side rendering
-const FIXED_DATE = new Date('2024-11-01').getTime()
+const FIXED_DATE = new Date('2024-10-01').getTime()
 
 function randomDate(start: Date, daysRange: number): string {
   const end = new Date(start)
@@ -214,8 +214,8 @@ function generateMockAd(): Ad {
     companyId: company.id,
     adCopy: adTemplate.replace('{product}', product),
     date: randomDate(
-      new Date('2024-11-02T00:00:00Z'),
-      30 // Generate dates within a 30-day range from Nov 2nd
+      new Date('2024-10-01T00:00:00Z'),
+      90 // Generate dates within a 30-day range from Oct 1st
     ),
     newsletters: getRandomNewsletters(),
     company,
