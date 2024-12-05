@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { format } from 'date-fns'
+import { format, startOfWeek } from 'date-fns'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -46,7 +46,7 @@ interface NewsletterInsightsProps {
 }
 
 export function NewsletterInsights({ newsletter, ads }: NewsletterInsightsProps) {
-  const [view, setView] = useState<ViewType>('sponsors')
+  const [view, setView] = useState<ViewType>('activity')
 
   // Process data for sponsors chart
   const sponsorsData = ads.reduce((acc, ad) => {
@@ -85,31 +85,115 @@ export function NewsletterInsights({ newsletter, ads }: NewsletterInsightsProps)
     return acc
   }, {} as Record<string, Record<string, number>>)
 
-  const dates = Object.keys(timelineDataMap).sort((a, b) => 
-    new Date(a).getTime() - new Date(b).getTime()
-  )
-
   const top5Companies = Object.entries(sponsorsData)
     .sort(([, a], [, b]) => b - a)
     .slice(0, 5)
     .map(([name]) => name)
 
-  const timelineChartData: ChartData<'line'> = {
-    labels: dates,
+  // Add this function to process data for weekly view
+  function getWeeklyData(timelineDataMap: Record<string, Record<string, number>>, companies: string[]) {
+    const weeklyData: Record<string, Record<string, number>> = {}
+    
+    Object.entries(timelineDataMap).forEach(([date, data]) => {
+      const weekStart = format(startOfWeek(new Date(date)), 'MMM d')
+      
+      if (!weeklyData[weekStart]) {
+        weeklyData[weekStart] = companies.reduce((acc, company) => ({
+          ...acc,
+          [company]: 0
+        }), {})
+      }
+      
+      companies.forEach(company => {
+        weeklyData[weekStart][company] += data[company] || 0
+      })
+    })
+    
+    // Sort the data by date
+    const sortedData = Object.entries(weeklyData)
+      .sort((a, b) => new Date(a[0]).getTime() - new Date(b[0]).getTime())
+      .reduce((acc, [date, data]) => ({
+        ...acc,
+        [date]: data
+      }), {})
+    
+    return sortedData
+  }
+
+  // Update the timeline chart data configuration
+  const timelineChartData: ChartData<'bar'> = {
+    labels: Object.keys(getWeeklyData(timelineDataMap, top5Companies)),
     datasets: top5Companies.map((company, index) => {
       const colors = getLineColors(index)
+      const weeklyData = getWeeklyData(timelineDataMap, top5Companies)
+      
       return {
         label: company,
-        data: dates.map(date => timelineDataMap[date][company] || 0),
-        borderColor: colors.line,
-        backgroundColor: colors.background,
-        fill: true,
-        tension: 0.3,
-        borderWidth: 2,
-        pointRadius: 3,
-        pointHoverRadius: 5,
+        data: Object.values(weeklyData).map(week => week[company]),
+        backgroundColor: colors.line,
+        borderRadius: 4,
+        borderSkipped: false,
       }
     }),
+  }
+
+  const stackedBarOptions: ChartOptions<'bar'> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'top',
+        align: 'start',
+        labels: {
+          padding: 20,
+          usePointStyle: true,
+          pointStyle: 'circle',
+          font: {
+            size: 12,
+            weight: 'normal',
+          },
+          color: chartColors.secondary,
+        },
+      },
+      tooltip: {
+        backgroundColor: 'white',
+        titleColor: chartColors.secondary,
+        bodyColor: chartColors.secondary,
+        borderColor: chartColors.border,
+        borderWidth: 1,
+        padding: 12,
+        bodyFont: { size: 14 },
+        titleFont: { size: 14, weight: 'bold' },
+        callbacks: {
+          label: (context) => `${context.dataset.label}: ${context.raw} ads`,
+        },
+      },
+    },
+    scales: {
+      x: {
+        stacked: true,
+        grid: { display: false },
+        ticks: {
+          color: chartColors.muted,
+          font: { size: 11 },
+        },
+        border: { display: false },
+      },
+      y: {
+        stacked: true,
+        beginAtZero: true,
+        grid: {
+          color: chartColors.grid,
+          lineWidth: 1,
+        },
+        border: { display: false },
+        ticks: {
+          color: chartColors.muted,
+          font: { size: 11 },
+          padding: 8,
+        },
+      },
+    },
   }
 
   // Process data for category breakdown
@@ -187,69 +271,14 @@ export function NewsletterInsights({ newsletter, ads }: NewsletterInsightsProps)
     },
   }
 
-  const lineOptions: ChartOptions<'line'> = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: 'top',
-        labels: {
-          padding: 20,
-          usePointStyle: true,
-          pointStyle: 'circle',
-          font: {
-            size: 12,
-            weight: 'bold',
-          },
-          color: chartColors.secondary,
-        },
-      },
-      tooltip: {
-        backgroundColor: 'white',
-        titleColor: chartColors.secondary,
-        bodyColor: chartColors.secondary,
-        borderColor: chartColors.border,
-        borderWidth: 1,
-        padding: 12,
-        bodyFont: {
-          size: 14,
-        },
-        titleFont: {
-          size: 14,
-          weight: 'bold',
-        },
-      },
-    },
-    scales: {
-      x: {
-        grid: {
-          display: false,
-        },
-        ticks: {
-          color: chartColors.muted,
-        },
-      },
-      y: {
-        beginAtZero: true,
-        grid: {
-          color: chartColors.grid,
-        },
-        ticks: {
-          color: chartColors.muted,
-          stepSize: 1,
-        },
-      },
-    },
-  }
-
   const viewOptions = {
     sponsors: {
       title: 'Top Advertisers',
-      description: `Most frequent advertisers in ${newsletter.name}, ranked by number of appearances`,
+      description: `Most frequent advertisers in ${newsletter.name}`
     },
     activity: {
-      title: 'Advertising Activity',
-      description: 'Daily advertising activity from top 5 sponsors over time',
+      title: 'Weekly Activity',
+      description: 'Advertising frequency by company per week'
     },
     categories: {
       title: 'Industry Breakdown',
@@ -274,8 +303,8 @@ export function NewsletterInsights({ newsletter, ads }: NewsletterInsightsProps)
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="sponsors">Top Advertisers</SelectItem>
             <SelectItem value="activity">Activity Timeline</SelectItem>
+            <SelectItem value="sponsors">Top Advertisers</SelectItem>
             <SelectItem value="categories">Industry Breakdown</SelectItem>
           </SelectContent>
         </Select>
@@ -287,7 +316,7 @@ export function NewsletterInsights({ newsletter, ads }: NewsletterInsightsProps)
         )}
 
         {view === 'activity' && (
-          <Line data={timelineChartData} options={lineOptions} />
+          <Bar data={timelineChartData} options={stackedBarOptions} />
         )}
 
         {view === 'categories' && (

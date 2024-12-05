@@ -1,20 +1,20 @@
 export function getLineColors(index: number) {
   const colors = [
-    { line: '#0891b2', background: '#67e8f9' }, // Cyan-600 & Cyan-300
-    { line: '#059669', background: '#6ee7b7' }, // Emerald-600 & Emerald-300  
-    { line: '#c026d3', background: '#f0abfc' }, // Fuchsia-600 & Fuchsia-300
-    { line: '#7c3aed', background: '#c4b5fd' }, // Violet-600 & Violet-300
-    { line: '#e11d48', background: '#fda4af' }, // Rose-600 & Rose-300
+    { line: '#f97316', background: 'rgba(249, 115, 22, 0.1)' },   // Orange-500
+    { line: '#fb923c', background: 'rgba(251, 146, 60, 0.1)' },   // Orange-400
+    { line: '#fdba74', background: 'rgba(253, 186, 116, 0.1)' },  // Orange-300
+    { line: '#fed7aa', background: 'rgba(254, 215, 170, 0.1)' },  // Orange-200
+    { line: '#ffedd5', background: 'rgba(255, 237, 213, 0.1)' },  // Orange-100
   ]
   return colors[index % colors.length]
 }
 
 // Common chart colors
 export const chartColors = {
-  primary: '#06b6d4',      // Cyan-500
+  primary: '#f97316',      // Orange-500
   secondary: '#64748b',    // Slate-500
-  muted: '#475569',       // Slate-400
+  muted: '#94a3b8',       // Slate-400
   border: '#e2e8f0',      // Slate-200
   background: '#f8fafc',  // Slate-50
-  grid: '#e2e8f0',       // Slate-200
+  grid: '#f1f5f9',       // Slate-100
 } 
