@@ -88,7 +88,7 @@ export function Header() {
 
   return (
     <header className="border-b">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+      <div className="container mx-auto h-16 flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <Link
             href={CONFIG.COMPANY.homepage}
@@ -105,12 +105,6 @@ export function Header() {
             className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             About
-          </Link>
-          <Link
-            href="/"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            Documentation
           </Link>
         </nav>
       </div>

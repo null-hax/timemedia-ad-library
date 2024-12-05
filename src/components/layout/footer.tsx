@@ -28,14 +28,6 @@ export function Footer() {
                   href="/"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  Documentation
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
                   Privacy Policy
                 </Link>
               </li>
