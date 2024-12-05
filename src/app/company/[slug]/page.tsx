@@ -61,32 +61,7 @@ export default function CompanyPage() {
       </header>
 
       <div className="grid gap-8 grid-cols-1 lg:grid-cols-3">
-        <Card className="p-4 lg:col-span-2">
-          <h2 className="text-xl font-semibold mb-2">Ad Frequency</h2>
-          <div className="h-48">
-            <AdTrendChart data={generateMockAds(100)} />
-          </div>
-        </Card>
-
-        <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Audience Profile</h2>
-          <div className="prose max-w-none">
-            <p>
-              {company.name} has been primarily sponsoring newsletters with audiences that fit a 
-              <strong> high-income earner profile, are young, and are interested in technology</strong>.
-            </p>
-            <p className="mt-4">
-              Most frequently seen in:
-            </p>
-            <ul>
-              <li>Morning Brew</li>
-              <li>The Hustle</li>
-              <li>TLDR Newsletter</li>
-            </ul>
-          </div>
-        </Card>
-
-        <Card className="p-6 lg:col-span-3">
+      <Card className="p-6 lg:col-span-3">
           <h2 className="text-xl font-semibold mb-6">Competitive Analysis</h2>
           <div className="grid gap-6 md:grid-cols-2">
             <div className="space-y-4">
@@ -118,6 +93,33 @@ export default function CompanyPage() {
             </div>
           </div>
         </Card>
+
+        <Card className="p-4 lg:col-span-2">
+          <h2 className="text-xl font-semibold mb-2">Ad Frequency</h2>
+          <div className="h-48">
+            <AdTrendChart data={generateMockAds(100)} />
+          </div>
+        </Card>
+
+        <Card className="p-6">
+          <h2 className="text-xl font-semibold mb-4">Audience Profile</h2>
+          <div className="prose max-w-none">
+            <p>
+              {company.name} has been primarily sponsoring newsletters with audiences that fit a 
+              <strong> high-income earner profile, are young, and are interested in technology</strong>.
+            </p>
+            <p className="mt-4">
+              Most frequently seen in:
+            </p>
+            <ul>
+              <li>Morning Brew</li>
+              <li>The Hustle</li>
+              <li>TLDR Newsletter</li>
+            </ul>
+          </div>
+        </Card>
+
+
 
         <div className="lg:col-span-3">
           <AdsGrid 
