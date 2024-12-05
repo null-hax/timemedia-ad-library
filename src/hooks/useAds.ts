@@ -28,21 +28,20 @@ export function useAds({ filters, sort, pagination }: UseAdsProps) {
       let filteredAds = generateMockAds(100)
 
       // Apply filters
-      if (filters.companyId) {
-        filteredAds = filteredAds.filter(ad => ad.companyId === filters.companyId)
-      }
-
-      if (filters.newsletterId) {
-        filteredAds = filteredAds.filter(ad => 
-          ad.newsletters.some(newsletter => newsletter.id === filters.newsletterId)
-        )
-      }
-
       if (filters.search) {
         const searchLower = filters.search.toLowerCase()
         filteredAds = filteredAds.filter(ad => 
           ad.adCopy.toLowerCase().includes(searchLower) ||
           ad.companyName.toLowerCase().includes(searchLower)
+        )
+      }
+
+      // Filter by newsletters - check if ad appears in any of the selected newsletters
+      if (filters.newsletterIds.length > 0) {
+        filteredAds = filteredAds.filter(ad => 
+          ad.newsletters.some(newsletter => 
+            filters.newsletterIds.includes(newsletter.id)
+          )
         )
       }
 

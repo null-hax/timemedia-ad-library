@@ -9,13 +9,8 @@ export const DEFAULT_FILTER_STATE: FilterState = {
     from: null,
     to: null,
   },
-  newsletterCount: {
-    min: null,
-    max: null,
-  },
+  newsletterIds: [],
   tags: [],
-  companyId: null,
-  newsletterId: null,
 }
 
 const DEFAULT_SORT_STATE: SortState = {
@@ -31,7 +26,6 @@ const DEFAULT_PAGINATION_STATE: PaginationState = {
 const DEFAULT_VIEW: ViewType = 'card'
 
 export function useAdsState(initialFilters: Partial<FilterState> = {}) {
-  // Merge initial filters with defaults
   const mergedFilters = {
     ...DEFAULT_FILTER_STATE,
     ...initialFilters
@@ -42,15 +36,17 @@ export function useAdsState(initialFilters: Partial<FilterState> = {}) {
   const [pagination, setPaginationState] = useState<PaginationState>(DEFAULT_PAGINATION_STATE)
   const [view, setViewState] = useState<ViewType>(DEFAULT_VIEW)
 
-  // Wrapped state setters
-  const setFilters = useCallback((newFilters: FilterState) => {
-    setFiltersState(newFilters)
-    setPaginationState(prev => ({ ...prev, page: 1 })) // Reset to first page
+  const setFilters = useCallback((newFilters: Partial<FilterState>) => {
+    setFiltersState(prev => ({
+      ...prev,
+      ...newFilters
+    }))
+    setPaginationState(prev => ({ ...prev, page: 1 }))
   }, [])
 
   const setSort = useCallback((newSort: SortState) => {
     setSortState(newSort)
-    setPaginationState(prev => ({ ...prev, page: 1 })) // Reset to first page
+    setPaginationState(prev => ({ ...prev, page: 1 }))
   }, [])
 
   const setPagination = useCallback((newPagination: Partial<PaginationState>) => {

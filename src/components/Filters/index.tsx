@@ -24,20 +24,19 @@ export function Filters({ filters, onChange }: FiltersProps) {
   const hasActiveFilters =
     filters.search ||
     (filters.dateRange?.from || filters.dateRange?.to) ||
-    (filters.newsletterCount?.min || filters.newsletterCount?.max) ||
+    filters.newsletterIds.length > 0 ||
     filters.tags.length > 0
 
   const handleClearFilters = () => {
-    onChange(DEFAULT_FILTER_STATE)
+    onChange({ ...DEFAULT_FILTER_STATE })
   }
 
   const handleTagToggle = (tag: string) => {
-    const currentTags = filters.tags || []
-    const newTags = currentTags.includes(tag)
-      ? currentTags.filter((t) => t !== tag)
-      : [...currentTags, tag]
+    const newTags = filters.tags.includes(tag)
+      ? filters.tags.filter((t) => t !== tag)
+      : [...filters.tags, tag]
 
-    onChange({ tags: newTags })
+    onChange({ ...filters, tags: newTags })
   }
 
   return (
@@ -57,38 +56,46 @@ export function Filters({ filters, onChange }: FiltersProps) {
           <div>
             <label className="text-sm font-medium mb-2 block">Date Range</label>
             <DateRangePicker
-              from={filters.dateRange?.from || null}
-              to={filters.dateRange?.to || null}
-              onChange={(from, to) => onChange({ dateRange: { from, to } })}
+              from={filters.dateRange.from?.toISOString() || null}
+              to={filters.dateRange.to?.toISOString() || null}
+              onChange={(from, to) => {
+                onChange({
+                  ...filters,
+                  dateRange: {
+                    from: from ? new Date(from) : null,
+                    to: to ? new Date(to) : null,
+                  },
+                })
+              }}
             />
           </div>
 
           <div>
             <label className="text-sm font-medium mb-2 block">Search</label>
             <Input
-              placeholder="Search companies, ad copy or newsletters..."
+              placeholder="Search companies or ad copy..."
               value={filters.search}
-              onChange={(e) => onChange({ search: e.target.value })}
+              onChange={(e) => onChange({ ...filters, search: e.target.value })}
             />
           </div>
 
           <div>
-          <label className="text-sm font-medium mb-2 block">Newsletters</label>
+            <label className="text-sm font-medium mb-2 block">Newsletters</label>
             <MultiSelect
-              value={filters.newsletters || []}
+              value={filters.newsletterIds}
               onValueChange={(value) => {
-                onChange({ newsletters: value.length > 0 ? value : undefined })
-            }}
-            options={newsletters
-              .sort((a, b) => a.traffic_rank - b.traffic_rank)
-              .map((newsletter) => ({
-                value: newsletter.id,
-                label: newsletter.name,
-              }))}
-            placeholder="Select newsletters..."
-          />
+                onChange({ ...filters, newsletterIds: value })
+              }}
+              options={newsletters
+                .sort((a, b) => a.traffic_rank - b.traffic_rank)
+                .map((newsletter) => ({
+                  value: newsletter.id,
+                  label: newsletter.name,
+                }))}
+              placeholder="Select newsletters..."
+            />
+          </div>
         </div>
-      </div>
 
         <div className="mt-4">
           <label className="text-sm font-medium mb-2 block">Tags</label>

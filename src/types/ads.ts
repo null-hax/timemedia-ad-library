@@ -17,13 +17,18 @@ export interface FilterState {
     from: Date | null
     to: Date | null
   }
-  newsletterCount: {
-    min: number | null
-    max: number | null
-  }
+  newsletterIds: string[]
   tags: string[]
-  companyId: string | null
-  newsletterId: string | null
+}
+
+export const DEFAULT_FILTER_STATE: FilterState = {
+  search: '',
+  dateRange: {
+    from: null,
+    to: null
+  },
+  newsletterIds: [],
+  tags: []
 }
 
 export interface SortState {
