@@ -8,6 +8,7 @@ import { notFound } from 'next/navigation'
 import { useParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { AdsGrid } from '@/components/AdsGrid'
+import { Tag } from 'lucide-react'
 
 export default function CompanyPage() {
   const params = useParams()
@@ -42,9 +43,11 @@ export default function CompanyPage() {
             <p className="text-muted-foreground mt-2">{company.description}</p>
           </div>
         </div>
-        <div className="flex flex-wrap gap-2">
-          {company.tags.map((tag) => (
-            <Badge
+        <div className="flex items-center gap-3">
+          <Tag className="h-4 w-4 text-muted-foreground" />
+          <div className="flex flex-wrap gap-2">
+            {company.tags.map((tag) => (
+              <Badge
               key={tag}
               variant="secondary"
               className="cursor-pointer hover:bg-secondary/80"
@@ -52,7 +55,8 @@ export default function CompanyPage() {
             >
               {tag}
             </Badge>
-          ))}
+            ))}
+          </div>
         </div>
       </header>
 

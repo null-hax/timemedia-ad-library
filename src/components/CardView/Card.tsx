@@ -23,7 +23,7 @@ export function AdCard({ ad, onTagClick }: AdCardProps) {
           <div className="flex-1">
             <Link
               href={`/company/${ad.company.slug}`}
-              className="inline-block hover:text-blue-600"
+              className="inline-block"
             >
               <h3 className="font-semibold text-lg">{ad.companyName}</h3>
             </Link>
@@ -32,7 +32,7 @@ export function AdCard({ ad, onTagClick }: AdCardProps) {
                 <Badge
                   key={tag}
                   variant="secondary"
-                  className="cursor-pointer hover:bg-secondary/80"
+                  className="cursor-pointer"
                   onClick={() => onTagClick?.(tag)}
                 >
                   {tag}
@@ -70,7 +70,7 @@ export function AdCard({ ad, onTagClick }: AdCardProps) {
                 <Link
                   key={newsletter.id}
                   href={`/newsletter/${newsletter.slug}`}
-                  className="block text-sm hover:text-blue-600"
+                  className="block text-sm"
                 >
                   {newsletter.name}
                 </Link>

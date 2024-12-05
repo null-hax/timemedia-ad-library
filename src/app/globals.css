@@ -70,3 +70,7 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+a {
+  @apply hover:text-orange-600;
+}

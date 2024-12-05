@@ -27,7 +27,7 @@ export function NewsletterListModal({
     <Dialog>
       <DialogTrigger asChild>
         {children || (
-          <button className="text-sm text-blue-600 hover:text-blue-800">
+          <button className="text-sm text-orange-600 hover:text-orange-800">
             +{newsletters.length - 3} more
           </button>
         )}
