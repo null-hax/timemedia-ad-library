@@ -78,7 +78,7 @@ export default function NewsletterPage() {
   ]
 
   return (
-    <div className="container mx-auto py-8 space-y-6">
+    <div className="container mx-auto py-8 space-y-6 pb-0">
       <div className="flex flex-col gap-6">
         {/* Header Section */}
         <div className="flex items-start justify-between">

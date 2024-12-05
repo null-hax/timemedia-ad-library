@@ -26,7 +26,7 @@ export default function CompanyPage() {
   }
 
   return (
-    <div className="container mx-auto py-8 space-y-8">
+    <div className="container mx-auto py-8 space-y-8 pb-0">
       <header className="space-y-4">
         <div className="flex items-center gap-4">
           {company.image && (
