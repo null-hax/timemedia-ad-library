@@ -55,6 +55,14 @@ export function NewsletterInsights({ newsletter, ads }: NewsletterInsightsProps)
     return acc
   }, {} as Record<string, number>)
 
+  // Add this helper function to get paired colors
+  function getPairedColors(index: number): string {
+    // Integer division by 2 to get the same color for pairs of bars
+    const colorIndex = Math.floor(index / 2)
+    return getLineColors(colorIndex).line
+  }
+
+  // Update the sponsorsChartData configuration
   const sponsorsChartData: ChartData<'bar'> = {
     labels: Object.entries(sponsorsData)
       .sort(([, a], [, b]) => b - a)
@@ -67,7 +75,7 @@ export function NewsletterInsights({ newsletter, ads }: NewsletterInsightsProps)
           .sort(([, a], [, b]) => b - a)
           .slice(0, 10)
           .map(([, count]) => count),
-        backgroundColor: chartColors.primary,
+        backgroundColor: Array.from({ length: 10 }, (_, i) => getPairedColors(i)),
         borderRadius: 6,
         barThickness: 16,
       },
@@ -208,13 +216,14 @@ export function NewsletterInsights({ newsletter, ads }: NewsletterInsightsProps)
     .sort(([, a], [, b]) => b - a)
     .slice(0, 10)
 
+  // Update the categoryChartData configuration
   const categoryChartData: ChartData<'bar'> = {
     labels: sortedCategories.map(([name]) => name),
     datasets: [
       {
         label: 'Ads',
         data: sortedCategories.map(([, count]) => count),
-        backgroundColor: chartColors.primary,
+        backgroundColor: Array.from({ length: 10 }, (_, i) => getPairedColors(i)),
         borderRadius: 6,
         barThickness: 16,
       },
@@ -265,7 +274,8 @@ export function NewsletterInsights({ newsletter, ads }: NewsletterInsightsProps)
         ticks: {
           color: chartColors.muted,
           font: {
-            weight: 'bold',
+            weight: 'normal',
+            size: 11,
           },
         },
       },
