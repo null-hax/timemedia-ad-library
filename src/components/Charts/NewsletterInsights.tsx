@@ -55,11 +55,22 @@ export function NewsletterInsights({ newsletter, ads }: NewsletterInsightsProps)
     return acc
   }, {} as Record<string, number>)
 
-  // Add this helper function to get paired colors
-  function getPairedColors(index: number): string {
-    // Integer division by 2 to get the same color for pairs of bars
-    const colorIndex = Math.floor(index / 2)
-    return getLineColors(colorIndex).line
+  // Add this helper function to get a more visually balanced color scheme
+  function getEnhancedBarColors(index: number): string {
+    // Using a more balanced set of orange shades that maintain good contrast
+    const colors = [
+      '#ff6b00', // Primary orange
+      '#ff6b00', // Pair 1
+      '#ff7b1a', 
+      '#ff7b1a', // Pair 2
+      '#ff8c33',
+      '#ff8c33', // Pair 3
+      '#ff9c4d',
+      '#ff9c4d', // Pair 4
+      '#ffad66',
+      '#ffad66', // Pair 5
+    ]
+    return colors[index] || colors[colors.length - 1]
   }
 
   // Update the sponsorsChartData configuration
@@ -75,7 +86,7 @@ export function NewsletterInsights({ newsletter, ads }: NewsletterInsightsProps)
           .sort(([, a], [, b]) => b - a)
           .slice(0, 10)
           .map(([, count]) => count),
-        backgroundColor: Array.from({ length: 10 }, (_, i) => getPairedColors(i)),
+        backgroundColor: Array.from({ length: 10 }, (_, i) => getEnhancedBarColors(i)),
         borderRadius: 6,
         barThickness: 16,
       },
@@ -223,7 +234,7 @@ export function NewsletterInsights({ newsletter, ads }: NewsletterInsightsProps)
       {
         label: 'Ads',
         data: sortedCategories.map(([, count]) => count),
-        backgroundColor: Array.from({ length: 10 }, (_, i) => getPairedColors(i)),
+        backgroundColor: Array.from({ length: 10 }, (_, i) => getEnhancedBarColors(i)),
         borderRadius: 6,
         barThickness: 16,
       },
@@ -265,6 +276,9 @@ export function NewsletterInsights({ newsletter, ads }: NewsletterInsightsProps)
         },
         ticks: {
           color: chartColors.muted,
+          font: {
+            size: 11,
+          },
         },
       },
       y: {
@@ -274,9 +288,10 @@ export function NewsletterInsights({ newsletter, ads }: NewsletterInsightsProps)
         ticks: {
           color: chartColors.muted,
           font: {
-            weight: 'normal',
             size: 11,
+            weight: 'normal',
           },
+          padding: 8,
         },
       },
     },

@@ -135,13 +135,13 @@ export default function NewsletterPage() {
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid gap-6 grid-cols-1">
+        <div className="grid grid-cols-1">
           <NewsletterInsights 
             newsletter={newsletter}
             ads={newsletterAds}
           />
           
-          <Separator className="my-2" />
+          <Separator className="my-2 mt-10" />
           
           <div>
             <AdsGrid 
