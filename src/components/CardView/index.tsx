@@ -1,16 +1,7 @@
 'use client'
 
-import { Ad, FilterState, PaginationState, SortState } from '@/types/ads'
+import { Ad, FilterState, PaginationState } from '@/types/ads'
 import { AdCard } from './Card'
-import { Button } from '@/components/ui/button'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { useMemo } from 'react'
 import { Pagination } from '@/components/Pagination'
 
 interface CardViewProps {
@@ -24,7 +15,6 @@ interface CardViewProps {
 }
 
 export function CardView({
-  filters,
   pagination,
   onPaginationChange,
   onTagClick,
@@ -32,7 +22,6 @@ export function CardView({
   loading,
   error,
 }: CardViewProps) {
-  const pageSizeOptions = [12, 24, 36, 48]
 
   if (error) {
     return (

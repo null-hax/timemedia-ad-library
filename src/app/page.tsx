@@ -1,14 +1,16 @@
-import dynamic from 'next/dynamic'
 import { Hero } from '@/components/Hero'
-
-// Dynamically import with proper config
-const AdsLibraryClient = dynamic(
-  () => import('@/components/AdsLibraryClient').then(mod => mod.default),
-  {
-    loading: () => <Hero />
-  }
-)
+import { AdsGrid } from '@/components/AdsGrid'
 
 export default function Page() {
-  return <AdsLibraryClient />
+  return (
+    <div   >
+      <Hero />
+      <div className="">
+        <AdsGrid 
+          showFilters={true}
+          showViewToggle={true}
+        />
+      </div>
+    </div>
+  )
 }

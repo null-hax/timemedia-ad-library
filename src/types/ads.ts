@@ -19,6 +19,8 @@ export interface FilterState {
   }
   newsletterIds: string[]
   tags: string[]
+  companyId?: string | null
+  newsletterId?: string | null
 }
 
 export const DEFAULT_FILTER_STATE: FilterState = {
@@ -28,7 +30,9 @@ export const DEFAULT_FILTER_STATE: FilterState = {
     to: null
   },
   newsletterIds: [],
-  tags: []
+  tags: [],
+  companyId: null,
+  newsletterId: null
 }
 
 export interface SortState {

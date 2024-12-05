@@ -8,13 +8,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { formatDate } from '@/lib/utils'
@@ -67,7 +60,6 @@ const ErrorState = ({ error }: { error: Error }) => (
 )
 
 export function TableView({
-  filters,
   sort,
   onSort,
   pagination,

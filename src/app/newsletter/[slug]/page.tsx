@@ -5,9 +5,8 @@ import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
 import { notFound } from 'next/navigation'
 import { useParams, useRouter } from 'next/navigation'
-import Image from 'next/image'
 import { AdsGrid } from '@/components/AdsGrid'
-import { NewsletterInsights } from '@/components/Charts/NewsletterAdFrequency'
+import { NewsletterInsights } from '@/components/Charts/NewsletterInsights'
 import { Separator } from '@/components/ui/separator'
 import { formatNumber } from '@/lib/utils'
 import { 
@@ -84,15 +83,6 @@ export default function NewsletterPage() {
         {/* Header Section */}
         <div className="flex items-start justify-between">
           <div className="flex gap-6">
-            {newsletter.image && (
-              <Image
-                src={newsletter.image}
-                alt={newsletter.name}
-                width={80}
-                height={80}
-                className="rounded-lg"
-              />
-            )}
             <div className="space-y-3">
               <div>
                 <h1 className="text-3xl font-bold">{newsletter.name}</h1>

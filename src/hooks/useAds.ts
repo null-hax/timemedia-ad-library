@@ -28,16 +28,18 @@ export function useAds({ filters, sort, pagination }: UseAdsProps) {
       let filteredAds = generateMockAds(100)
 
       // Apply filters
-      if (filters.search) {
-        const searchLower = filters.search.toLowerCase()
-        filteredAds = filteredAds.filter(ad => 
-          ad.adCopy.toLowerCase().includes(searchLower) ||
-          ad.companyName.toLowerCase().includes(searchLower)
-        )
+      if (filters.companyId) {
+        filteredAds = filteredAds.filter(ad => ad.companyId === filters.companyId)
       }
 
-      // Filter by newsletters - check if ad appears in any of the selected newsletters
-      if (filters.newsletterIds.length > 0) {
+      // Handle both single newsletter and multiple newsletter selection
+      if (filters.newsletterId) {
+        // Single newsletter filter (used in newsletter page)
+        filteredAds = filteredAds.filter(ad => 
+          ad.newsletters.some(newsletter => newsletter.id === filters.newsletterId)
+        )
+      } else if (filters.newsletterIds.length > 0) {
+        // Multiple newsletter filter (used in main grid)
         filteredAds = filteredAds.filter(ad => 
           ad.newsletters.some(newsletter => 
             filters.newsletterIds.includes(newsletter.id)

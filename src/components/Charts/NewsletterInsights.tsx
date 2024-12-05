@@ -270,7 +270,7 @@ export function NewsletterInsights({ newsletter, ads }: NewsletterInsightsProps)
           value={view}
           onValueChange={(value) => setView(value as ViewType)}
         >
-          <SelectTrigger className="w-[160px]">
+          <SelectTrigger className="w-[180px]">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -281,7 +281,7 @@ export function NewsletterInsights({ newsletter, ads }: NewsletterInsightsProps)
         </Select>
       </div>
 
-      <div className="h-[400px]">
+      <div className="h-[300px]">
         {view === 'sponsors' && (
           <Bar data={sponsorsChartData} options={barOptions} />
         )}
