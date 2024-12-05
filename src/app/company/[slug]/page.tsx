@@ -9,6 +9,7 @@ import { useParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { AdsGrid } from '@/components/AdsGrid'
 import { Tag } from 'lucide-react'
+import { Separator } from '@/components/ui/separator'
 
 export default function CompanyPage() {
   const params = useParams()
@@ -119,9 +120,9 @@ export default function CompanyPage() {
           </div>
         </Card>
 
-
-
         <div className="lg:col-span-3">
+        <Separator />
+
           <AdsGrid 
             initialFilters={{ companyId: company.id }}
             showFilters={false}

@@ -141,7 +141,7 @@ export default function NewsletterPage() {
             ads={newsletterAds}
           />
           
-          <Separator className="my-2 mt-10" />
+          <Separator className="mt-8" />
           
           <div>
             <AdsGrid 
