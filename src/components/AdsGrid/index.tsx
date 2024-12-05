@@ -70,8 +70,9 @@ export function AdsGrid({
       <div className="container mx-auto py-8">
         <div className="space-y-6">
             {showViewToggle && (
-            <div className="flex justify-end">
-                <ViewToggle value={view} onChange={setView} />
+            <div className="flex justify-between">
+              <h2 className="text-xl font-semibold mb-6">Recent Ads</h2>
+              <ViewToggle value={view} onChange={setView} />
             </div>
             )}
             {view === 'table' ? (

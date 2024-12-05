@@ -144,7 +144,6 @@ export default function NewsletterPage() {
           <Separator className="my-2" />
           
           <div>
-            <h2 className="text-xl font-semibold mb-6">Recent Ads</h2>
             <AdsGrid 
               initialFilters={{ newsletterId: newsletter.id }}
               showFilters={false}

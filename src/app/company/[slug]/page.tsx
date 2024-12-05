@@ -116,7 +116,6 @@ export default function CompanyPage() {
         </Card>
 
         <div className="lg:col-span-3">
-          <h2 className="text-2xl font-semibold mb-6">Recent Ads</h2>
           <AdsGrid 
             initialFilters={{ companyId: company.id }}
             showFilters={false}
