@@ -6,7 +6,7 @@ import type { Ad } from '@/types/ads'
 
 export async function getServerAds(): Promise<Ad[]> {
   try {
-    const cookieStore = cookies()
+    const cookieStore = await cookies()
     const supabase = createServerClient(cookieStore)
     
     const { data, error } = await supabase
@@ -53,7 +53,7 @@ export async function getServerAds(): Promise<Ad[]> {
       image: `https://picsum.photos/200?grayscale`,
       link: item.link || '',
       readMoreLink: item.read_more_link || '',
-    }))
+    }));
 
   } catch (err) {
     console.error('Detailed error in getServerAds:', {
