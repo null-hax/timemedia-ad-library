@@ -1,16 +1,20 @@
 import { Hero } from '@/components/Hero'
 import { AdsGrid } from '@/components/AdsGrid'
+import { getAds } from '@/lib/services/ads'
+import { USE_SUPABASE } from '@/lib/config'
 
-export default function Page() {
+export default async function Page() {
+  // Pre-fetch the ads data
+  const initialAds = await getAds()
+  
   return (
-    <div   >
+    <div>
       <Hero />
-      <div className="">
-        <AdsGrid 
-          showFilters={true}
-          showViewToggle={true}
-        />
-      </div>
+      <AdsGrid 
+        showFilters={true}
+        showViewToggle={true}
+        initialAds={initialAds}
+      />
     </div>
   )
 }

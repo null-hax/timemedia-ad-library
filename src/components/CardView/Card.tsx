@@ -12,9 +12,6 @@ interface AdCardProps {
 }
 
 export function AdCard({ ad, onTagClick }: AdCardProps) {
-  const topNewsletters = [...ad.newsletters]
-    .sort((a, b) => a.traffic_rank - b.traffic_rank)
-    .slice(0, 3)
 
   return (
     <Card className="hover:shadow-lg transition-shadow">
@@ -27,8 +24,9 @@ export function AdCard({ ad, onTagClick }: AdCardProps) {
             >
               <h3 className="font-semibold text-lg">{ad.companyName}</h3>
             </Link>
-            <div className="flex flex-wrap gap-1 mt-2">
-              {ad.company.tags.map((tag) => (
+            {ad.company.tags.length > 0 && (
+              <div className="flex flex-wrap gap-1 mt-2">
+                {ad.company.tags.map((tag) => (
                 <Badge
                   key={tag}
                   variant="secondary"
@@ -37,10 +35,11 @@ export function AdCard({ ad, onTagClick }: AdCardProps) {
                 >
                   {tag}
                 </Badge>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
-          {ad.image && (
+          {/* {ad.image && (
             <div className="flex-shrink-0">
               <Image
                 src={ad.image}
@@ -50,7 +49,7 @@ export function AdCard({ ad, onTagClick }: AdCardProps) {
                 className="rounded-md"
               />
             </div>
-          )}
+          )} */}
         </div>
       </CardHeader>
       <CardContent>
@@ -63,9 +62,9 @@ export function AdCard({ ad, onTagClick }: AdCardProps) {
           </div>
           <div className="space-y-2">
             <div className="text-sm font-medium">
-              Appeared in {ad.newsletters.length} newsletters:
+              Appeared in {ad.readMoreLink ? <a href={ad.readMoreLink} target="_blank" rel="noopener noreferrer" className="underline">{ad.newsletterName}</a> : ad.newsletterName}
             </div>
-            <div className="space-y-1">
+            {/* <div className="space-y-1">
               {topNewsletters.map((newsletter) => (
                 <Link
                   key={newsletter.id}
@@ -78,7 +77,7 @@ export function AdCard({ ad, onTagClick }: AdCardProps) {
               {ad.newsletters.length > 3 && (
                 <NewsletterListModal newsletters={ad.newsletters} />
               )}
-            </div>
+            </div> */}
           </div>
         </div>
       </CardContent>

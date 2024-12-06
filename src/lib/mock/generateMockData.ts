@@ -232,7 +232,7 @@ interface CachedData {
 
 let mockDataCache: CachedData | null = null
 
-export const generateMockAds = cache((count: number = 20): Ad[] => {
+export const generateMockAds = cache((count: number = 100): Ad[] => {
   // Check if we have valid cached data
   if (mockDataCache) {
     const age = Date.now() - mockDataCache.timestamp

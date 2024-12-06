@@ -43,6 +43,7 @@ const areFiltersEqual = (filters1: Partial<FilterState>, filters2: Partial<Filte
 
 interface AdsGridProps {
   initialFilters?: Partial<FilterState>
+  initialAds?: Ad[]
   showFilters?: boolean
   showViewToggle?: boolean
   className?: string
@@ -50,6 +51,7 @@ interface AdsGridProps {
 
 export function AdsGrid({ 
   initialFilters = {}, 
+  initialAds,
   showFilters = true,
   showViewToggle = true,
   className = ''
@@ -69,7 +71,6 @@ export function AdsGrid({
 
   // Update filters when initialFilters change
   useEffect(() => {
-    // Skip if the filters haven't actually changed
     if (areFiltersEqual(prevInitialFiltersRef.current, initialFilters)) {
       return
     }
@@ -79,7 +80,6 @@ export function AdsGrid({
       ...initialFilters
     })
 
-    // Update ref
     prevInitialFiltersRef.current = initialFilters
   }, [initialFilters, setFilters])
 
@@ -88,7 +88,8 @@ export function AdsGrid({
     filters,
     sort,
     pagination,
-  }), [filters, sort, pagination])
+    initialAds
+  }), [filters, sort, pagination, initialAds])
 
   // Fetch data using memoized params
   const { data, loading, error } = useAds(queryParams)

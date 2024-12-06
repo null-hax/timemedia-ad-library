@@ -4,9 +4,11 @@ export interface Ad {
   companyId: string
   adCopy: string
   date: string
-  newsletters: Newsletter[]
+  newsletterName: string
   company: Company
-  image?: string
+  image: string
+  link: string
+  readMoreLink: string
 }
 
 export type ViewType = 'table' | 'card'
@@ -17,10 +19,10 @@ export interface FilterState {
     from: Date | null
     to: Date | null
   }
-  newsletterIds: string[]
+  newsletterNames: string[]
   tags: string[]
   companyId?: string | null
-  newsletterId?: string | null
+  newsletterName?: string | null
 }
 
 export const DEFAULT_FILTER_STATE: FilterState = {
@@ -29,10 +31,10 @@ export const DEFAULT_FILTER_STATE: FilterState = {
     from: null,
     to: null
   },
-  newsletterIds: [],
+  newsletterNames: [],
   tags: [],
   companyId: null,
-  newsletterId: null
+  newsletterName: null
 }
 
 export interface SortState {
