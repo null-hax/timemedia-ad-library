@@ -42,7 +42,7 @@ export function Hero() {
                   <div className="text-sm font-medium text-muted-foreground mt-1">Ads Analyzed</div>
                 </div>
                 <div className="relative flex flex-col items-center p-6 bg-white/50 rounded-2xl shadow-sm ring-1 ring-black/5 transition-transform hover:-translate-y-1">
-                  <div className="text-4xl font-bold text-orange-500">15+</div>
+                  <div className="text-4xl font-bold text-orange-500">12</div>
                   <div className="text-sm font-medium text-muted-foreground mt-1">Industries Covered</div>
                 </div>
                 <div className="relative flex flex-col items-center p-6 bg-white/50 rounded-2xl shadow-sm ring-1 ring-black/5 transition-transform hover:-translate-y-1">

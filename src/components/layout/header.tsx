@@ -2,14 +2,13 @@
 
 import Link from 'next/link'
 import { CONFIG } from '@/lib/config'
-import { usePathname, useParams } from 'next/navigation'
-import { companies, newsletters } from '@/lib/mock/generateMockData'
+import { usePathname } from 'next/navigation'
+import { useNavigation } from '@/contexts/navigation'
 
 export function Header() {
   const pathname = usePathname()
-  const params = useParams()
+  const { currentCompany } = useNavigation()
   
-  // Determine current section and entity based on path
   const getNavigation = () => {
     if (pathname === '/') {
       return {
@@ -18,19 +17,17 @@ export function Header() {
       }
     }
     
-    if (pathname.startsWith('/company/')) {
-      const company = companies.find(c => c.slug === params.slug)
+    if (pathname.startsWith('/company/') && currentCompany) {
       return {
-        section: 'company',
-        entity: company
+        section: 'company' as const,
+        entity: currentCompany
       }
     }
     
     if (pathname.startsWith('/newsletter/')) {
-      const newsletter = newsletters.find(n => n.slug === params.slug)
       return {
         section: 'newsletter',
-        entity: newsletter
+        entity: null
       }
     }
     
