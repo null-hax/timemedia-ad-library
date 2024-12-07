@@ -2,6 +2,7 @@ import { createServerClient } from '@/lib/supabase/server'
 import { USE_SUPABASE } from '@/lib/config'
 import { marked } from 'marked'
 import { Ad } from '@/types/ads'
+import { mockCompanyData, mockRelatedCompanies, generateMockMentions } from '@/lib/mocks/companyMock'
 
 export type CompanyData = {
   id: number
@@ -39,14 +40,12 @@ export const getCompanyBySlug = async (slug: string) => {
     .ilike('company_name', slug.replace(/-/g, ' '))
     .single()
 
-  if (error) {
-    console.error('Error fetching company:', error)
-    return null
-  }
-  
-  if (!company) {
-    console.error('No company found for slug:', slug)
-    return null
+  if (error || !company) {
+    // Instead of returning null, return mock data with a flag
+    return {
+      ...mockCompanyData,
+      isDemo: true
+    }
   }
 
   // Parse fields
@@ -60,16 +59,25 @@ export const getCompanyBySlug = async (slug: string) => {
       appeared_in: typeof company.appeared_in === 'string'
         ? JSON.parse(company.appeared_in)
         : company.appeared_in,
-      audience_profile: company.audience_profile ? marked(company.audience_profile) : ''
+      audience_profile: company.audience_profile ? marked(company.audience_profile) : '',
+      isDemo: false
     }
   } catch (e) {
     console.error('Error parsing company data:', e)
-    return null
+    return {
+      ...mockCompanyData,
+      isDemo: true
+    }
   }
 }
 
 export const getRelatedCompanies = async (companyIds: number[]): Promise<RelatedCompany[]> => {
   if (!companyIds?.length) return []
+  
+  // If it's a demo company, return mock related companies
+  if (companyIds.includes(0)) {
+    return mockRelatedCompanies
+  }
 
   const supabase = await createServerSupabase()
   
@@ -110,6 +118,11 @@ export const transformMentionToAd = (mention: any): Ad => ({
 })
 
 export const getCompanyMentions = async (companyId: number): Promise<Ad[]> => {
+  // If it's a demo company, return mock mentions
+  if (companyId === 0) {
+    return generateMockMentions()
+  }
+
   const supabase = await createServerSupabase()
   
   const { data: mentions, error } = await supabase

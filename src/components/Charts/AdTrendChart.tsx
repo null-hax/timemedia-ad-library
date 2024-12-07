@@ -31,23 +31,17 @@ ChartJS.register(
 
 interface AdTrendChartProps {
   data: Ad[]
-  days?: number
-  onDateRangeChange?: (from: Date | null, to: Date | null) => void
-  dateRange?: {
-    from: Date | null
-    to: Date | null
+  dateRange: {
+    from: Date
+    to: Date
   }
+  className?: string
 }
 
-export function AdTrendChart({ 
-  data, 
-  days = 30,
-  onDateRangeChange,
-  dateRange = { from: null, to: null }
-}: AdTrendChartProps) {
+export function AdTrendChart({ data, dateRange, className = '' }: AdTrendChartProps) {
   // Use dateRange if provided, otherwise fallback to days prop
   const endDate = dateRange.to ? startOfDay(dateRange.to) : startOfDay(new Date())
-  const startDate = dateRange.from ? startOfDay(dateRange.from) : subDays(endDate, days)
+  const startDate = dateRange.from ? startOfDay(dateRange.from) : subDays(endDate, 90)
   const dateInterval = eachDayOfInterval({ start: startDate, end: endDate })
 
   // Filter data based on date range
@@ -146,16 +140,7 @@ export function AdTrendChart({
   }
 
   return (
-    <div className="w-full h-full">
-      {onDateRangeChange && (
-        <div className="flex justify-end mb-4">
-          <ChartDateRangePicker
-            from={dateRange.from}
-            to={dateRange.to}
-            onChange={onDateRangeChange}
-          />
-        </div>
-      )}
+    <div className={`h-full w-full ${className}`}>
       <Line data={chartData} options={options} />
     </div>
   )

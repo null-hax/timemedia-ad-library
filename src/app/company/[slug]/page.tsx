@@ -14,9 +14,9 @@ export default async function CompanyPage({
 }: PageProps) {
   const { slug } = params
   const decodedSlug = decodeURIComponent(slug)
-  
+
   const company = await getCompanyBySlug(decodedSlug)
-  
+
   if (!company) {
     notFound()
   }

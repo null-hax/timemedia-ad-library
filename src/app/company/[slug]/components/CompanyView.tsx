@@ -10,9 +10,11 @@ import { subDays } from 'date-fns'
 import { useRouter } from 'next/navigation'
 import { CompanyData, RelatedCompany } from '@/lib/services/companies'
 import { Ad } from '@/types/ads'
+import { AlertCircle } from 'lucide-react'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 type CompanyViewProps = {
-  company: CompanyData
+  company: CompanyData & { isDemo?: boolean }
   relatedCompanies: RelatedCompany[]
   mentions: Ad[]
 }
@@ -28,6 +30,18 @@ export function CompanyView({ company, relatedCompanies, mentions }: CompanyView
 
   return (
     <div className="container mx-auto py-8 space-y-8 pb-0">
+      {company.isDemo && (
+        <Alert className="mb-6 border-2 border-yellow-500/50 bg-yellow-50/50">
+          <div className="flex items-center gap-3">
+            <AlertCircle className="h-5 w-5 text-yellow-600" />
+            <AlertDescription className="text-sm text-yellow-800 py-1">
+              This is a demo page showing how company insights would appear. 
+              Real data for this company is coming soon to our database!
+            </AlertDescription>
+          </div>
+        </Alert>
+      )}
+      
       <header className="space-y-4">
         <div className="flex items-center gap-4">
           <div>
@@ -80,13 +94,14 @@ export function CompanyView({ company, relatedCompanies, mentions }: CompanyView
 
         <Card className="p-4 lg:col-span-2">
           <h2 className="text-xl font-semibold mb-2">Ad Frequency</h2>
-          <div className="h-48">
+          <div className="h-60">
             <AdTrendChart 
               data={mentions}
               dateRange={{
                 from: subDays(new Date(), 30),
                 to: new Date()
               }}
+              className={company.isDemo ? "grayscale opacity-75" : ""}
             />
           </div>
         </Card>
@@ -113,7 +128,7 @@ export function CompanyView({ company, relatedCompanies, mentions }: CompanyView
             initialFilters={{ 
               companyId: company.id.toString()
             }}
-            initialAds={mentions}
+            initialAds={mentions.slice(0, 3)}
             showFilters={false}
             showViewToggle={false}
           />
