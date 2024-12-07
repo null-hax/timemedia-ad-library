@@ -22,12 +22,13 @@ export const slugify = (text: string) => {
   return text
     .toLowerCase()
     .replace(/[^\w ]+/g, '')
-    .replace(/ +/g, '-')
+    .replace(/ +/g, '-');
 }
 
 export const createServerSupabase = async () => {
   const { cookies } = await import('next/headers')
-  return createServerClient(cookies())
+  const cookieStore = await cookies()
+  return createServerClient(cookieStore)
 }
 
 export const getCompanyBySlug = async (slug: string) => {

@@ -33,7 +33,8 @@ type MentionWithCompany = {
 
 export const createServerSupabase = async () => {
   const { cookies } = await import('next/headers')
-  return createServerClient(cookies())
+  const cookieStore = await cookies()
+  return createServerClient(cookieStore)
 }
 
 export const getNewsletterBySlug = async (slug: string) => {
@@ -149,5 +150,5 @@ export const getNewsletterMentions = async (newsletterName: string): Promise<Ad[
       readMoreLink: mention.read_more_link || mention.link,
       image: ''
     }
-  })
+  });
 } 
