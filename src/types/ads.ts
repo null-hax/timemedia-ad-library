@@ -14,15 +14,15 @@ export interface Ad {
 export type ViewType = 'table' | 'card'
 
 export interface FilterState {
-  search: string
-  dateRange: {
-    from: Date | null
-    to: Date | null
-  }
-  newsletterNames: string[]
-  tags: string[]
-  companyId?: string | null
-  newsletterName?: string | null
+  dateRange?: {
+    from: Date | null;
+    to: Date | null;
+  };
+  tags?: string[];
+  search?: string;
+  companyId?: string;
+  newsletterId?: string;
+  newsletterIds?: string[];
 }
 
 export const DEFAULT_FILTER_STATE: FilterState = {
