@@ -12,7 +12,7 @@ export default async function Page() {
       <Hero />
       <AdsGrid 
         showFilters={true}
-        showViewToggle={true}
+        showViewToggle={false}
         initialAds={initialAds}
       />
     </div>

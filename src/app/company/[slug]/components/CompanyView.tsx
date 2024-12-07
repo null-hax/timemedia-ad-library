@@ -115,7 +115,7 @@ export function CompanyView({ company, relatedCompanies, mentions }: CompanyView
             }}
             initialAds={mentions}
             showFilters={false}
-            showViewToggle={true}
+            showViewToggle={false}
           />
         </div>
       </div>

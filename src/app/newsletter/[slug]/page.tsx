@@ -177,11 +177,11 @@ export default function NewsletterPage() {
           <div>
             <AdsGrid 
               initialFilters={{ 
-                newsletterId: newsletter.id,
+                newsletterId: newsletter.id.toString(),
                 dateRange: dateRange
               }}
               showFilters={false}
-              showViewToggle={true}
+              showViewToggle={false}
             />
           </div>
         </div>
