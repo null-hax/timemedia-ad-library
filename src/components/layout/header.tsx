@@ -7,7 +7,7 @@ import { useNavigation } from '@/contexts/navigation'
 
 export function Header() {
   const pathname = usePathname()
-  const { currentCompany } = useNavigation()
+  const { currentCompany, currentNewsletter } = useNavigation()
   
   const getNavigation = () => {
     if (pathname === '/') {
@@ -24,10 +24,10 @@ export function Header() {
       }
     }
     
-    if (pathname.startsWith('/newsletter/')) {
+    if (pathname.startsWith('/newsletter/') && currentNewsletter) {
       return {
-        section: 'newsletter',
-        entity: null
+        section: 'newsletter' as const,
+        entity: currentNewsletter
       }
     }
     
@@ -44,12 +44,7 @@ export function Header() {
       case 'company':
         return (
           <>
-            <Link
-              href="/"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              {CONFIG.APP.name}
-            </Link>
+            <Link href="/">{CONFIG.APP.name}</Link>
             <span className="text-muted-foreground">/</span>
             <span className="font-semibold">
               Company: {entity?.name || 'Loading...'}
@@ -59,12 +54,7 @@ export function Header() {
       case 'newsletter':
         return (
           <>
-            <Link
-              href="/"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              {CONFIG.APP.name}
-            </Link>
+            <Link href="/">{CONFIG.APP.name}</Link>
             <span className="text-muted-foreground">/</span>
             <span className="font-semibold">
               Newsletter: {entity?.name || 'Loading...'}
@@ -72,14 +62,7 @@ export function Header() {
           </>
         )
       default:
-        return (
-          <Link
-            href="/"
-            className="font-semibold hover:text-primary transition-colors"
-          >
-            {CONFIG.APP.name}
-          </Link>
-        )
+        return <Link href="/">{CONFIG.APP.name}</Link>
     }
   }
 

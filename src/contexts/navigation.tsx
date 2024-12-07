@@ -7,20 +7,36 @@ type Company = {
   slug: string
 }
 
+type Newsletter = {
+  name: string
+  slug: string
+}
+
 type NavigationContextType = {
   currentCompany?: Company
+  currentNewsletter?: Newsletter
   setCurrentCompany: (company: Company | undefined) => void
+  setCurrentNewsletter: (newsletter: Newsletter | undefined) => void
 }
 
 const NavigationContext = createContext<NavigationContextType>({
-  setCurrentCompany: () => {}
+  setCurrentCompany: () => {},
+  setCurrentNewsletter: () => {}
 })
 
 export function NavigationProvider({ children }: { children: ReactNode }) {
   const [currentCompany, setCurrentCompany] = useState<Company | undefined>()
+  const [currentNewsletter, setCurrentNewsletter] = useState<Newsletter | undefined>()
 
   return (
-    <NavigationContext.Provider value={{ currentCompany, setCurrentCompany }}>
+    <NavigationContext.Provider 
+      value={{ 
+        currentCompany, 
+        currentNewsletter,
+        setCurrentCompany,
+        setCurrentNewsletter 
+      }}
+    >
       {children}
     </NavigationContext.Provider>
   )

@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { NewsletterListModal } from '@/components/NewsletterListModal'
 import Image from 'next/image'
 import Link from 'next/link'
+import { slugify } from '@/lib/services/companies'
 
 interface AdCardProps {
   ad: Ad
@@ -62,7 +63,13 @@ export function AdCard({ ad, onTagClick }: AdCardProps) {
           </div>
           <div className="space-y-2">
             <div className="text-sm font-medium">
-              Appeared in {ad.readMoreLink ? <a href={ad.readMoreLink} target="_blank" rel="noopener noreferrer" className="underline">{ad.newsletterName}</a> : ad.newsletterName}
+              Appeared in{' '}
+              <Link 
+                href={`/newsletter/${slugify(ad.newsletterName)}`} 
+                className="underline hover:text-primary transition-colors"
+              >
+                {ad.newsletterName}
+              </Link>
             </div>
             {/* <div className="space-y-1">
               {topNewsletters.map((newsletter) => (

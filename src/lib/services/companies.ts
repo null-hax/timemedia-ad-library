@@ -1,5 +1,4 @@
 import { createServerClient } from '@/lib/supabase/server'
-import { cookies } from 'next/headers'
 import { USE_SUPABASE } from '@/lib/config'
 import { marked } from 'marked'
 import { Ad } from '@/types/ads'
@@ -25,8 +24,13 @@ export const slugify = (text: string) => {
     .replace(/ +/g, '-')
 }
 
+export const createServerSupabase = async () => {
+  const { cookies } = await import('next/headers')
+  return createServerClient(cookies())
+}
+
 export const getCompanyBySlug = async (slug: string) => {
-  const supabase = createServerClient(cookies())
+  const supabase = await createServerSupabase()
   
   // First find company by slugified name - case insensitive
   const { data: company, error } = await supabase
@@ -51,7 +55,7 @@ export const getCompanyBySlug = async (slug: string) => {
       ...company,
       tags: typeof company.tags === 'string' ? JSON.parse(company.tags) : company.tags,
       related_companies: company.related_companies ? 
-        company.related_companies.split(',').map(id => parseInt(id.trim(), 10)) : 
+        company.related_companies.split(',').map((id: string) => parseInt(id.trim(), 10)) : 
         [],
       appeared_in: typeof company.appeared_in === 'string'
         ? JSON.parse(company.appeared_in)
@@ -65,10 +69,9 @@ export const getCompanyBySlug = async (slug: string) => {
 }
 
 export const getRelatedCompanies = async (companyIds: number[]): Promise<RelatedCompany[]> => {
-
   if (!companyIds?.length) return []
 
-  const supabase = createServerClient(cookies())
+  const supabase = await createServerSupabase()
   
   const { data: companies, error } = await supabase
     .from('companies')
@@ -81,7 +84,6 @@ export const getRelatedCompanies = async (companyIds: number[]): Promise<Related
     return []
   }
 
-  // Ensure the returned data matches RelatedCompany type
   return companies.map(company => ({
     id: typeof company.id === 'string' ? parseInt(company.id, 10) : company.id,
     company_name: company.company_name,
@@ -100,15 +102,15 @@ export const transformMentionToAd = (mention: any): Ad => ({
     id: mention.company_id.toString(),
     name: mention.company_name,
     slug: slugify(mention.company_name),
-    tags: [], // We can populate this if needed
+    tags: [],
   },
   link: mention.link,
   readMoreLink: mention.read_more_link || mention.link,
-  image: '' // We can add this if needed
+  image: ''
 })
 
 export const getCompanyMentions = async (companyId: number): Promise<Ad[]> => {
-  const supabase = createServerClient(cookies())
+  const supabase = await createServerSupabase()
   
   const { data: mentions, error } = await supabase
     .from('mentions')
@@ -118,6 +120,5 @@ export const getCompanyMentions = async (companyId: number): Promise<Ad[]> => {
 
   if (error) return []
   
-  // Transform mentions to match Ad type
   return mentions.map(transformMentionToAd)
 } 

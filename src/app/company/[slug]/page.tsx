@@ -1,7 +1,7 @@
 import { getCompanyBySlug, getRelatedCompanies, getCompanyMentions } from '@/lib/services/companies'
 import { notFound } from 'next/navigation'
 import { CompanyView } from './components/CompanyView'
-import { NavigationSetter } from './components/NavigationSetter'
+import { NavigationSetter } from '@/components/NavigationSetter'
 
 interface PageProps {
   params: { slug: string }
