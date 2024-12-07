@@ -61,7 +61,7 @@ export function ChartDateRangePicker({
           <Button
             variant="outline"
             className={cn(
-              'h-8 justify-start text-left font-normal',
+              'h-9 justify-start text-left font-normal w-full',
               !from && !to && 'text-muted-foreground'
             )}
           >
