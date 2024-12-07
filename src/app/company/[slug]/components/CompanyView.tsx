@@ -12,6 +12,8 @@ import { CompanyData, RelatedCompany } from '@/lib/services/companies'
 import { Ad } from '@/types/ads'
 import { AlertCircle } from 'lucide-react'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { useState } from 'react'
+import { ChartDateRangePicker } from '@/components/ui/date-range-picker'
 
 type CompanyViewProps = {
   company: CompanyData & { isDemo?: boolean }
@@ -21,10 +23,25 @@ type CompanyViewProps = {
 
 export function CompanyView({ company, relatedCompanies, mentions }: CompanyViewProps) {
   const router = useRouter()
+  const [dateRange, setDateRange] = useState<{from: Date | null; to: Date | null}>({
+    from: subDays(new Date(), 30),
+    to: new Date()
+  })
 
   const handleTagClick = (tag: string) => {
     router.push(`/?tags=${tag}`)
   }
+
+  const handleDateRangeChange = (from: Date | null, to: Date | null) => {
+    setDateRange({ from, to })
+  }
+
+  // Filter mentions based on date range
+  const filteredMentions = mentions.filter(mention => {
+    const mentionDate = new Date(mention.date)
+    return (!dateRange.from || mentionDate >= dateRange.from) && 
+           (!dateRange.to || mentionDate <= dateRange.to)
+  })
 
   const appearedIn = company.appeared_in || {} as Record<string, number>
 
@@ -93,13 +110,20 @@ export function CompanyView({ company, relatedCompanies, mentions }: CompanyView
         </Card>
 
         <Card className="p-4 lg:col-span-2">
-          <h2 className="text-xl font-semibold mb-2">Ad Frequency</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold">Ad Frequency</h2>
+            <ChartDateRangePicker
+              from={dateRange.from}
+              to={dateRange.to}
+              onChange={handleDateRangeChange}
+            />
+          </div>
           <div className="h-60">
             <AdTrendChart 
-              data={mentions}
+              data={filteredMentions}
               dateRange={{
-                from: subDays(new Date(), 30),
-                to: new Date()
+                from: dateRange.from || subDays(new Date(), 30),
+                to: dateRange.to || new Date()
               }}
               className={company.isDemo ? "grayscale opacity-75" : ""}
             />
@@ -126,9 +150,10 @@ export function CompanyView({ company, relatedCompanies, mentions }: CompanyView
           <Separator />
           <AdsGrid 
             initialFilters={{ 
-              companyId: company.id.toString()
+              companyId: company.id.toString(),
+              dateRange
             }}
-            initialAds={mentions.slice(0, 3)}
+            initialAds={filteredMentions}
             showFilters={false}
             showViewToggle={false}
           />
