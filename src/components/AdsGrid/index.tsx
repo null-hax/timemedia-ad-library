@@ -7,7 +7,7 @@ import { CardView } from '@/components/CardView'
 import { ViewToggle } from '@/components/ViewToggle'
 import { Filters } from '@/components/Filters'
 import { useMemo, useCallback, useEffect, useRef } from 'react'
-import { DEFAULT_FILTER_STATE, FilterState } from '@/types/ads'
+import { DEFAULT_FILTER_STATE, FilterState, Ad } from '@/types/ads'
 
 // Helper function to compare date objects
 const areDatesEqual = (date1: Date | null, date2: Date | null): boolean => {

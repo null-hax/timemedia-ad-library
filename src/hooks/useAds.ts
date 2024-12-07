@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import type {
   Ad,
   FilterState,
@@ -26,9 +26,15 @@ const isValidDate = (date: any): date is Date => {
 }
 
 export function useAds({ filters, sort, pagination, initialAds }: UseAdsProps) {
-  const [data, setData] = useState<ApiResponse<Ad[]> | null>(null)
-  const [loading, setLoading] = useState(!initialAds)
+  const [data, setData] = useState<ApiResponse<Ad[]> | null>(initialAds ? {
+    data: initialAds,
+    total: initialAds.length,
+    page: 1,
+    pageSize: pagination.pageSize
+  } : null)
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
+  const isInitialMount = useRef(true)
 
   const processAds = useCallback(async (rawAds: Ad[]) => {
     let filteredAds = [...rawAds]
@@ -110,24 +116,42 @@ export function useAds({ filters, sort, pagination, initialAds }: UseAdsProps) {
   }, [filters, sort, pagination])
 
   useEffect(() => {
+    let isMounted = true
+    
     const fetchAndProcessAds = async () => {
-      try {
+      // Don't set loading on initial mount if we have initialAds
+      if (!isInitialMount.current || !initialAds) {
         setLoading(true)
-        
-        // Use initialAds if provided, otherwise fetch new data
+      }
+
+      try {
         const rawAds = initialAds || (USE_SUPABASE ? await getSupabaseAds() : generateMockAds(100))
         const processed = await processAds(rawAds)
-        setData(processed)
         
+        if (isMounted) {
+          setData(processed)
+          setLoading(false)
+        }
       } catch (err) {
-        setError(err instanceof Error ? err : new Error('Failed to fetch ads'))
-      } finally {
-        setLoading(false)
+        if (isMounted) {
+          setError(err instanceof Error ? err : new Error('Failed to fetch ads'))
+          setLoading(false)
+        }
       }
     }
 
     fetchAndProcessAds()
+    isInitialMount.current = false
+
+    return () => { isMounted = false }
   }, [filters, sort, pagination, initialAds, processAds])
+
+  // If we have initialAds on first render, we're not loading
+  useEffect(() => {
+    if (initialAds && isInitialMount.current) {
+      setLoading(false)
+    }
+  }, [initialAds])
 
   return { data, loading, error }
 }

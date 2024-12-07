@@ -22,7 +22,6 @@ export function CardView({
   loading,
   error,
 }: CardViewProps) {
-
   if (error) {
     return (
       <div className="text-center py-8 text-red-500">
@@ -31,7 +30,20 @@ export function CardView({
     )
   }
 
-  if (!data?.data.length && !loading) {
+  if (loading) {
+    return (
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {Array.from({ length: 9 }).map((_, i) => (
+          <div
+            key={i}
+            className="h-[300px] bg-muted animate-pulse rounded-lg"
+          />
+        ))}
+      </div>
+    )
+  }
+
+  if (!data?.data?.length) {
     return (
       <div className="text-center py-8 text-muted-foreground">
         No ads found. Try adjusting your filters.
@@ -41,31 +53,18 @@ export function CardView({
 
   return (
     <div className="space-y-6">
-      {loading ? (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: pagination.pageSize }).map((_, i) => (
-            <div
-              key={i}
-              className="h-[300px] bg-muted animate-pulse rounded-lg"
-            />
-          ))}
-        </div>
-      ) : (
-        <>
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {data?.data.map((ad) => (
-              <AdCard key={ad.id} ad={ad} onTagClick={onTagClick} />
-            ))}
-          </div>
-          {data && (
-            <Pagination
-              pagination={pagination}
-              onPaginationChange={onPaginationChange}
-              total={data.total}
-              className="border-t"
-            />
-          )}
-        </>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {data.data.map((ad) => (
+          <AdCard key={ad.id} ad={ad} onTagClick={onTagClick} />
+        ))}
+      </div>
+      {data && (
+        <Pagination
+          pagination={pagination}
+          onPaginationChange={onPaginationChange}
+          total={data.total}
+          className="border-t"
+        />
       )}
     </div>
   )
