@@ -109,6 +109,7 @@ export const getNewsletterMentions = async (newsletterName: string): Promise<Ad[
       read_more_link
     `)
     .eq('newsletter_name', newsletterName)
+    .eq('category', 'sponsor')
     .order('date', { ascending: false })
 
   if (error) {

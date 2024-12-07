@@ -9,10 +9,9 @@ interface PageProps {
 }
 
 export default async function NewsletterPage({
-  params,
-  searchParams,
+  params
 }: PageProps) {
-  const { slug } = params
+  const { slug } = await params
   const decodedSlug = decodeURIComponent(slug)
   
   const newsletter = await getNewsletterBySlug(decodedSlug)
