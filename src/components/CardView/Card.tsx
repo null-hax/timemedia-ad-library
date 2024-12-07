@@ -66,7 +66,7 @@ export function AdCard({ ad, onTagClick }: AdCardProps) {
           </div>
           <div className="space-y-2">
             <div className="text-sm font-medium">
-              Appeared in{' '}
+              Sponsored in{' '}
               <Link 
                 href={`/newsletter/${slugify(ad.newsletterName)}`} 
                 className="underline hover:text-orange-500 transition-colors"
