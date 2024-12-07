@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
 import { Tag } from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
-import { AdsGrid } from '@/components/AdsGrid'
+import { AdsGrid } from '@/components/AdsGrid/index'
 import { subDays } from 'date-fns'
 import { useRouter } from 'next/navigation'
 import { CompanyData, RelatedCompany } from '@/lib/services/companies'
@@ -111,7 +111,7 @@ export function CompanyView({ company, relatedCompanies, mentions }: CompanyView
           <Separator />
           <AdsGrid 
             initialFilters={{ 
-              companyId: company.id
+              companyId: company.id.toString()
             }}
             initialAds={mentions}
             showFilters={false}
