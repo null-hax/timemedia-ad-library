@@ -1,5 +1,6 @@
 import { createServerClient } from '@/lib/supabase/server'
 import { Ad } from '@/types/ads'
+import { mockNewsletterData, generateMockNewsletterMentions } from '@/lib/mocks/newsletterMock'
 
 export type Newsletter = {
   id: string
@@ -50,8 +51,11 @@ export const getNewsletterBySlug = async (slug: string) => {
     .single()
 
   if (error || !newsletter) {
-    console.error('Error fetching newsletter:', error)
-    return null
+    // Return mock data with isDemo flag instead of null
+    return {
+      ...mockNewsletterData,
+      isDemo: true
+    }
   }
 
   // Get additional newsletter metadata
@@ -87,11 +91,17 @@ export const getNewsletterBySlug = async (slug: string) => {
     date: newsletter.date,
     text_body: newsletter.text_body,
     created_at: newsletter.created_at,
-    read_more_link: newsletter.read_more_link
+    read_more_link: newsletter.read_more_link,
+    isDemo: false
   }
 }
 
 export const getNewsletterMentions = async (newsletterName: string): Promise<Ad[]> => {
+  // If it's the demo newsletter, return mock mentions
+  if (newsletterName === mockNewsletterData.from_name) {
+    return generateMockNewsletterMentions()
+  }
+
   const supabase = await createServerSupabase()
   
   // Simply fetch mentions for the newsletter

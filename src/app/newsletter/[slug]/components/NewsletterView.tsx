@@ -12,9 +12,11 @@ import { Ad } from '@/types/ads'
 import { formatNumber } from '@/lib/utils'
 import { NewsletterInsights } from '@/components/Charts/NewsletterInsights'
 import { useState } from 'react'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { AlertCircle } from 'lucide-react'
 
 type NewsletterViewProps = {
-  newsletter: Newsletter
+  newsletter: Newsletter & { isDemo?: boolean }
   mentions: Ad[]
 }
 
@@ -76,6 +78,18 @@ export function NewsletterView({ newsletter, mentions }: NewsletterViewProps) {
 
   return (
     <div className="container mx-auto py-8 space-y-6 pb-0">
+      {newsletter.isDemo && (
+        <Alert className="mb-6 border-2 border-yellow-500/50 bg-yellow-50/50">
+          <div className="flex items-center gap-3">
+            <AlertCircle className="h-5 w-5 text-yellow-600" />
+            <AlertDescription className="text-sm text-yellow-800 py-1">
+              This is a demo page showing how newsletter insights would appear. 
+              Real data for this newsletter is coming soon to our database!
+            </AlertDescription>
+          </div>
+        </Alert>
+      )}
+
       <div className="flex flex-col gap-6">
         {/* Header Section */}
         <div className="flex items-start justify-between">
@@ -138,6 +152,7 @@ export function NewsletterView({ newsletter, mentions }: NewsletterViewProps) {
             ads={mentions}
             dateRange={dateRange}
             onDateRangeChange={handleDateRangeChange}
+            className={newsletter.isDemo ? "grayscale opacity-75" : ""}
           />
           
           <Separator className="mt-8" />

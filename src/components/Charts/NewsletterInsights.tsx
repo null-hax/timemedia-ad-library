@@ -42,13 +42,14 @@ ChartJS.register(
 type ViewType = 'sponsors' | 'activity' | 'categories'
 
 interface NewsletterInsightsProps {
-  newsletter: Newsletter
+  newsletter: Newsletter & { isDemo?: boolean }
   ads: Ad[]
   onDateRangeChange?: (from: Date | null, to: Date | null) => void
   dateRange?: {
     from: Date | null
     to: Date | null
   }
+  className?: string
 }
 
 // Add type for weekly data at the top of the file
@@ -72,7 +73,8 @@ export function NewsletterInsights({
   newsletter, 
   ads,
   onDateRangeChange,
-  dateRange = { from: null, to: null }
+  dateRange = { from: null, to: null },
+  className = ''
 }: NewsletterInsightsProps) {
   const [view, setView] = useState<ViewType>('activity')
   const timeRange = getTimeRange(dateRange.from, dateRange.to)
@@ -356,7 +358,7 @@ export function NewsletterInsights({
   }
 
   return (
-    <Card className="p-6">
+    <Card className={`p-6 ${className}`}>
       <div className="flex items-center justify-between mb-8">
         <div>
           <h2 className="text-xl font-semibold">{viewOptions[view].title}</h2>
