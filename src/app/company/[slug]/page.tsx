@@ -9,10 +9,9 @@ interface PageProps {
 }
 
 export default async function CompanyPage({
-  params,
-  searchParams,
+  params
 }: PageProps) {
-  const { slug } = params
+  const { slug } = await params
   const decodedSlug = decodeURIComponent(slug)
 
   const company = await getCompanyBySlug(decodedSlug)
