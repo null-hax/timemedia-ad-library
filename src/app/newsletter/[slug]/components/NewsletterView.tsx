@@ -150,7 +150,7 @@ export function NewsletterView({ newsletter, mentions }: NewsletterViewProps) {
               }}
               initialAds={mentions}
               showFilters={false}
-              showViewToggle={true}
+              showViewToggle={false}
             />
           </div>
         </div>

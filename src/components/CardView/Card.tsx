@@ -5,6 +5,8 @@ import { Badge } from '@/components/ui/badge'
 import { NewsletterListModal } from '@/components/NewsletterListModal'
 import Image from 'next/image'
 import Link from 'next/link'
+import { ExternalLink } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { slugify } from '@/lib/services/companies'
 
 interface AdCardProps {
@@ -13,44 +15,45 @@ interface AdCardProps {
 }
 
 export function AdCard({ ad, onTagClick }: AdCardProps) {
-
   return (
     <Card className="hover:shadow-lg transition-shadow">
       <CardHeader>
         <div className="flex justify-between items-start gap-4">
           <div className="flex-1">
-            <Link
-              href={`/company/${ad.company.slug}`}
-              className="inline-block"
-            >
-              <h3 className="font-semibold text-lg">{ad.companyName}</h3>
-            </Link>
+            <div className="flex justify-between items-start">
+              <Link
+                href={`/company/${ad.company.slug}`}
+                className="inline-block transition-colors"
+              >
+                <h3 className="font-semibold text-lg">{ad.companyName}</h3>
+              </Link>
+              {ad.readMoreLink && (
+                <a
+                  href={ad.readMoreLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  title="View original ad"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                </a>
+              )}
+            </div>
             {ad.company.tags.length > 0 && (
               <div className="flex flex-wrap gap-1 mt-2">
                 {ad.company.tags.map((tag) => (
-                <Badge
-                  key={tag}
-                  variant="secondary"
-                  className="cursor-pointer"
-                  onClick={() => onTagClick?.(tag)}
-                >
-                  {tag}
-                </Badge>
+                  <Badge
+                    key={tag}
+                    variant="secondary"
+                    className="cursor-pointer"
+                    onClick={() => onTagClick?.(tag)}
+                  >
+                    {tag}
+                  </Badge>
                 ))}
               </div>
             )}
           </div>
-          {/* {ad.image && (
-            <div className="flex-shrink-0">
-              <Image
-                src={ad.image}
-                alt={ad.companyName}
-                width={48}
-                height={48}
-                className="rounded-md"
-              />
-            </div>
-          )} */}
         </div>
       </CardHeader>
       <CardContent>
@@ -66,25 +69,11 @@ export function AdCard({ ad, onTagClick }: AdCardProps) {
               Appeared in{' '}
               <Link 
                 href={`/newsletter/${slugify(ad.newsletterName)}`} 
-                className="underline hover:text-primary transition-colors"
+                className="underline hover:text-orange-500 transition-colors"
               >
                 {ad.newsletterName}
               </Link>
             </div>
-            {/* <div className="space-y-1">
-              {topNewsletters.map((newsletter) => (
-                <Link
-                  key={newsletter.id}
-                  href={`/newsletter/${newsletter.slug}`}
-                  className="block text-sm"
-                >
-                  {newsletter.name}
-                </Link>
-              ))}
-              {ad.newsletters.length > 3 && (
-                <NewsletterListModal newsletters={ad.newsletters} />
-              )}
-            </div> */}
           </div>
         </div>
       </CardContent>
