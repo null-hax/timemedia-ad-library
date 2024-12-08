@@ -24,7 +24,7 @@ import {
   ChartData,
   ChartOptions,
 } from 'chart.js'
-import { Bar, Line } from 'react-chartjs-2'
+import { Bar } from 'react-chartjs-2'
 import { getLineColors, chartColors } from '@/lib/utils/chartStyles'
 import { ChartDateRangePicker } from '@/components/ui/date-range-picker'
 
@@ -382,7 +382,7 @@ export function NewsletterInsights({
             <SelectContent>
               <SelectItem value="activity">Activity Timeline</SelectItem>
               <SelectItem value="sponsors">Top Advertisers</SelectItem>
-              <SelectItem value="categories">Industry Breakdown</SelectItem>
+              {/* <SelectItem value="categories">Industry Breakdown</SelectItem> */}
             </SelectContent>
           </Select>
         </div>
