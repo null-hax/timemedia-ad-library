@@ -28,10 +28,6 @@ export function CompanyView({ company, relatedCompanies, mentions }: CompanyView
     to: new Date()
   })
 
-  const handleTagClick = (tag: string) => {
-    router.push(`/?tags=${tag}`)
-  }
-
   const handleDateRangeChange = (from: Date | null, to: Date | null) => {
     setDateRange({ from, to })
   }
@@ -73,8 +69,7 @@ export function CompanyView({ company, relatedCompanies, mentions }: CompanyView
               <Badge
                 key={tag}
                 variant="secondary"
-                className="cursor-pointer hover:bg-secondary/80"
-                onClick={() => handleTagClick(tag)}
+                className=""
               >
                 {tag}
               </Badge>

@@ -97,7 +97,7 @@ export function Filters({ filters, onChange }: FiltersProps) {
           </div>
         </div>
 
-        <div className="mt-4">
+        {/* <div className="mt-4">
           <label className="text-sm font-medium mb-2 block">Tags</label>
           <div className="flex flex-wrap gap-2">
             {allTags.map((tag) => (
@@ -111,7 +111,7 @@ export function Filters({ filters, onChange }: FiltersProps) {
               </Badge>
             ))}
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   )
