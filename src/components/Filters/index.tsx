@@ -47,7 +47,7 @@ export function Filters({ filters, onChange }: FiltersProps) {
   }
 
   return (
-    <div className="space-y-4 sticky top-0 bg-background z-10 py-6 shadow-sm">
+    <div className="space-y-4 md:sticky top-0 bg-background z-10 py-6 shadow-sm">
       <div className="container mx-auto">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold">Filters</h2>
