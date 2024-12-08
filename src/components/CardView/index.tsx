@@ -30,7 +30,7 @@ export function CardView({
     )
   }
 
-  if (loading || !loading) {
+  if (loading) {
     return (
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 9 }).map((_, i) => (
