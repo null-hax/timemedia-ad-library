@@ -135,7 +135,7 @@ export function CompanyView({ company, relatedCompanies, mentions }: CompanyView
                 .sort(([,a], [,b]) => b - a)
                 .slice(0, 3)
                 .map(([newsletter, count]) => (
-                  <li key={newsletter}>{newsletter} ({count} mentions)</li>
+                  <li key={newsletter}><a href={`/newsletter/${newsletter.toLowerCase().replace(/\s+/g, '-')}`} className="text-primary hover:underline">{newsletter}</a></li>
                 ))}
             </ul>
           </div>
