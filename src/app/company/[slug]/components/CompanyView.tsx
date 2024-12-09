@@ -89,7 +89,7 @@ export function CompanyView({ company, relatedCompanies, mentions }: CompanyView
               </p>
             </div>
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Key Competitors</h3>
+              <h3 className="text-lg font-semibold">Related Companies</h3>
               <div className="space-y-6">
                 {relatedCompanies.map((related) => (
                   <div key={related.id} className="border-l-4 border-primary pl-4">
