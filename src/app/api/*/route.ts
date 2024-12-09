@@ -7,7 +7,6 @@ export async function OPTIONS() {
 
 export async function GET(request: NextRequest) {
   try {
-    // Your code...
     return corsResponse(NextResponse.json(Response))
   } catch (error) {
     return corsResponse(

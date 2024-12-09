@@ -11,8 +11,8 @@ export const DEFAULT_FILTER_STATE: FilterState = {
   },
   newsletterIds: [],
   tags: [],
-  companyId: null,
-  newsletterId: null
+  companyId: undefined,
+  newsletterId: undefined
 }
 
 const DEFAULT_SORT_STATE: SortState = {
