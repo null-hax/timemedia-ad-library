@@ -59,7 +59,7 @@ export function Filters({ filters, onChange }: FiltersProps) {
           )}
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-3">
           <div>
             <label className="text-sm font-medium mb-2 block">Date Range</label>
             <ChartDateRangePicker
@@ -70,16 +70,16 @@ export function Filters({ filters, onChange }: FiltersProps) {
             />
           </div>
 
-          <div>
+          <div className="col-span-2">
             <label className="text-sm font-medium mb-2 block">Search</label>
             <Input
-              placeholder="Search companies or ad copy..."
+              placeholder="Search companies, newsletters, or ad copy..."
               value={filters.search}
               onChange={(e) => onChange({ ...filters, search: e.target.value })}
             />
           </div>
 
-          <div>
+          {/* <div>
             <label className="text-sm font-medium mb-2 block">Newsletters</label>
             <MultiSelect
               value={filters.newsletterIds}
@@ -94,7 +94,7 @@ export function Filters({ filters, onChange }: FiltersProps) {
                 }))}
               placeholder="Select newsletters..."
             />
-          </div>
+          </div> */}
         </div>
 
         {/* <div className="mt-4">

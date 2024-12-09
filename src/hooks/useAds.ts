@@ -57,7 +57,8 @@ export function useAds({ filters, sort, pagination, initialAds }: UseAdsProps) {
       const searchTerm = filters.search.toLowerCase()
       filteredAds = filteredAds.filter(ad => 
         ad.company.name.toLowerCase().includes(searchTerm) ||
-        ad.adCopy.toLowerCase().includes(searchTerm)
+        ad.adCopy.toLowerCase().includes(searchTerm) ||
+        ad.newsletterName.toLowerCase().includes(searchTerm)
       )
     }
 
